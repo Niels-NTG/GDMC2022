@@ -1,0 +1,32 @@
+{
+  "connectors": [
+    {
+      "facing": 0,
+      "nextStructure": [
+        "lab_a/hub",
+        "lab_a/walkway",
+        "lab_a/observation",
+        "lab_a/ladder"
+      ]
+    },
+    {
+      "facing": 2,
+      "nextStructure": [
+        "lab_a/hub",
+        "lab_a/walkway",
+        "lab_a/observation",
+        "lab_a/ladder"
+      ]
+    }
+  ],
+  "postProcessing": [
+    {
+      "placePillars": [
+        {
+          "pos": [2, 2],
+          "material": "iron_block"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  // Indicate effective origin and size of structure.
+  // X Y Z sizeX sizeY sizeZ
+  // Leave value to null to use default for only that axis.
+  "effectiveSpace": [1, null, 1, 10, null, 12], // null
+  // When this structure is a node to which other structures can be attached, this lists all conneciton points.
+  "connectors": [
+    {
+      // Direction connection is facing (0,1,2,3 = NORTH, EAST, SOUTH, WEST
+      "facing": 0, // 0
+      // Structure to use to transition to next piece (eg. a doorway)
+      "transitionStructure": "hub_door", // None
+      // List of potential next structures to connect to the this one. If null gets picked or it's an empty list
+      // means that this becomes a leaf in the network.
+      "nextStructure": [
+        "lab_a/walkway",
+        "lab_a/walkway_corner",
+        "lab_a/observation",
+        null
+      ] // []
+    },
+    {
+      "facing": 1,
+      "transitionStructure": "hub_door",
+      "nextStructure": [
+        "lab_a/walkway",
+        "lab_a/walkway_corner",
+        "lab_a/observation",
+        null
+      ]
+    }
+  ],
+  // List of optional processing functions for after when the structure has been placed.
+  "postProcessing": [
+    {
+      // PlacePillar function. Puts pillars underneath the structure using the argument "pillars"
+      "placePillars": {
+        "pillars": [
+          {
+            "pos": [3, 3],
+            "material": "iron_block",
+            "ladder": // null (if no ladder) 0, 1, 2, 3 (orientation)
+          }
+        ]
+      }
+    },
+    // Place decorative structures using the same placement rules as "transitionStructure"
+    {
+      "decorations": "walkway_balcony"
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "connectors": [
+    {
+      "facing": 0,
+      "transitionStructure": "hub_door",
+      "nextStructure": [
+        "lab_a/walkway",
+        "lab_a/observation",
+        null
+      ]
+    },
+    {
+      "facing": 1,
+      "transitionStructure": "hub_door",
+      "nextStructure": [
+        "lab_a/walkway",
+        "lab_a/observation",
+        null
+      ]
+    },
+    {
+      "facing": 2,
+      "transitionStructure": "hub_door",
+      "nextStructure": [
+        "lab_a/walkway",
+        "lab_a/observation",
+        null
+      ]
+    },
+    {
+      "facing": 3,
+      "transitionStructure": "hub_door",
+      "nextStructure": [
+        "lab_a/walkway",
+        "lab_a/observation",
+        null
+      ]
+    }
+  ],
+  "postProcessing": [
+    {
+      "placePillars": [
+        {
+          "pos": [1, 1],
+          "material": "iron_block"
+        },
+        {
+          "pos": [1, 3],
+          "material": "iron_block"
+        },
+        {
+          "pos": [3, 1],
+          "material": "iron_block"
+        },
+        {
+          "pos": [3, 3],
+          "material": "iron_block"
+        }
+      ]
+    }
+  ]
+}

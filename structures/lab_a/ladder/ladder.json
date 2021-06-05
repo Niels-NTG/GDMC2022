@@ -1,0 +1,38 @@
+{
+  "connectors": [
+    {
+      "facing": 0,
+      "transitionStructure": "ladder_door",
+      "nextStructure": [
+        "lab_a/walkway",
+        "lab_a/observation",
+        null
+      ]
+    },
+    {
+      "facing": 2,
+      "transitionStructure": "ladder_door",
+      "nextStructure": [
+        "lab_a/walkway",
+        "lab_a/observation",
+        null
+      ]
+    }
+  ],
+  "postProcessing": [
+    {
+      "placePillars": [
+        {
+          "pos": [2, 0],
+          "material": "iron_block",
+          "ladder": 2
+        },
+        {
+          "pos": [2, 4],
+          "material": "iron_block",
+          "ladder": 0
+        }
+      ]
+    }
+  ]
+}
