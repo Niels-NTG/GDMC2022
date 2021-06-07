@@ -35,13 +35,15 @@ class Structure:
         self.x = x
         self.y = y
         self.z = z
+        self.rotation = rotation
+
+        self.rotateAroundCenter = rotateAroundCenter
 
         if os.path.isfile('structures/' + structureFilePath + '.json'):
             with open('structures/' + structureFilePath + '.json') as JSONfile:
                 self.customProperties = json.load(JSONfile)
                 self._applyCustomProperties()
 
-        self.setRotation(rotation, rotateAroundCenter)
         self.materialReplacements = dict()
 
     def setPosition(self, x=None, y=None, z=None):
@@ -67,25 +69,6 @@ class Structure:
             self.file["size"][1].value = y
         if z is not None:
             self.file["size"][2].value = z
-
-    # TODO apply rotation only on placement, not before.
-    def setRotation(self, rotation, rotateAroundCenter=False):
-        if rotation is not None and 0 <= rotation <= 3:
-            self.rotation = rotation
-
-        # Change position of blocks inside structure to match rotation.
-        if rotation != self.ROTATE_NORTH:
-            for block in self.file["blocks"]:
-                currentPosition = [
-                    block["pos"][0].value,
-                    block["pos"][1].value,
-                    block["pos"][2].value
-                ]
-                pivot = self.origin if not rotateAroundCenter else self.getHorizontalCenter()
-                newPosition = mapUtils.rotatePointAroundOrigin(pivot, currentPosition, rotation)
-                block["pos"][0].value = newPosition[0]
-                block["pos"][1].value = newPosition[1]
-                block["pos"][2].value = newPosition[2]
 
     def getSizeX(self):
         return self.file["size"][0].value
@@ -137,44 +120,28 @@ class Structure:
         ]
 
     def getShortestDimension(self):
-        if self.rotation % 2 == 0:
-            return np.argmin([np.abs(self.getSizeX()), np.abs(self.getSizeY()), np.abs(self.getSizeZ())])
-        return np.argmin([np.abs(self.getSizeZ()), np.abs(self.getSizeY()), np.abs(self.getSizeX())])
+        return np.argmin([np.abs(self.getSizeX()), np.abs(self.getSizeY()), np.abs(self.getSizeZ())])
 
     def getLongestDimension(self):
-        if self.rotation % 2 == 0:
-            return np.argmax([np.abs(self.getSizeX()), np.abs(self.getSizeY()), np.abs(self.getSizeZ())])
-        return np.argmax([np.abs(self.getSizeZ()), np.abs(self.getSizeY()), np.abs(self.getSizeX())])
+        return np.argmax([np.abs(self.getSizeX()), np.abs(self.getSizeY()), np.abs(self.getSizeZ())])
 
     def getShortestHorizontalDimension(self):
-        if self.rotation % 2 == 0:
-            return np.argmin([np.abs(self.getSizeX()), np.abs(self.getSizeZ())]) * 2
-        return np.argmin([np.abs(self.getSizeZ()), np.abs(self.getSizeX())]) * 2
+        return np.argmin([np.abs(self.getSizeX()), np.abs(self.getSizeZ())]) * 2
 
     def getLongestHorizontalDimension(self):
-        if self.rotation % 2 == 0:
-            return np.argmax([np.abs(self.getSizeX()), np.abs(self.getSizeZ())]) * 2
-        return np.argmax([np.abs(self.getSizeZ()), np.abs(self.getSizeX())]) * 2
+        return np.argmax([np.abs(self.getSizeX()), np.abs(self.getSizeZ())]) * 2
 
     def getShortestSize(self):
-        if self.rotation % 2 == 0:
-            return [self.getSizeX(), self.getSizeY(), self.getSizeZ()][self.getShortestDimension()]
-        return [self.getSizeZ(), self.getSizeY(), self.getSizeX()][self.getShortestDimension()]
+        return [self.getSizeX(), self.getSizeY(), self.getSizeZ()][self.getShortestDimension()]
 
     def getLongestSize(self):
-        if self.rotation % 2 == 0:
-            return [self.getSizeX(), self.getSizeY(), self.getSizeZ()][self.getLongestDimension()]
-        return [self.getSizeZ(), self.getSizeY(), self.getSizeX()][self.getLongestDimension()]
+        return [self.getSizeX(), self.getSizeY(), self.getSizeZ()][self.getLongestDimension()]
 
     def getShortestHorizontalSize(self):
-        if self.rotation % 2 == 0:
-            return [self.getSizeX(), 0, self.getSizeZ()][self.getShortestHorizontalDimension()]
-        return [self.getSizeZ(), 0, self.getSizeX()][self.getShortestHorizontalDimension()]
+        return [self.getSizeX(), 0, self.getSizeZ()][self.getShortestHorizontalDimension()]
 
     def getLongestHorizontalSize(self):
-        if self.rotation % 2 == 0:
-            return [self.getSizeX(), 0, self.getSizeZ()][self.getLongestHorizontalDimension()]
-        return [self.getSizeZ(), 0, self.getSizeX()][self.getLongestHorizontalDimension()]
+        return [self.getSizeX(), 0, self.getSizeZ()][self.getLongestHorizontalDimension()]
 
     # Add dict of materials from the structure file that need replaced with something else.
     # eg. "minecraft:iron_block", "minecraft:gold_block" will put gold blocks where the structure file has iron blocks
@@ -218,13 +185,17 @@ class Structure:
 
         return properties
 
-    @staticmethod
-    def getStructuresInDir(structureDir=""):
-        structureList = []
-        for file in os.listdir("./structures/" + structureDir):
-            if file.endswith(".nbt"):
-                structureList.append(structureDir + "/" + file.replace(".nbt", ""))
-        return structureList
+    def _applyRotation(self, block):
+        currentPosition = [
+            block["pos"][0].value,
+            block["pos"][1].value,
+            block["pos"][2].value
+        ]
+        if self.rotation == self.ROTATE_NORTH:
+            return currentPosition
+
+        pivot = self.origin if not self.rotateAroundCenter else self.getHorizontalCenter()
+        return mapUtils.rotatePointAroundOrigin(pivot, currentPosition, self.rotation)
 
     def getMaterialList(self):
         materials = []
@@ -245,11 +216,7 @@ class Structure:
             if includeAir is False and blockMaterial == "minecraft:air":
                 continue
 
-            blockPosition = [
-                block["pos"][0].value + self.x,
-                block["pos"][1].value + self.y,
-                block["pos"][2].value + self.z
-            ]
+            blockPosition = np.add(self._applyRotation(block), [self.x, self.y, self.z])
             blockProperties = self._getBlockProperties(block)
             mapUtils.setBlock(blockPosition[0], blockPosition[1], blockPosition[2], blockMaterial, blockProperties)
 
