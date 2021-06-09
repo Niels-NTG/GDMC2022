@@ -46,6 +46,17 @@ def getMostFrequentHeight(heightMap):
     return np.bincount(heightMap.flatten()).argmax()
 
 
+# Crop 2D map (eg. heightmap).
+def getCroppedGrid(grid=np.array([]), globalOrigin=[0, 0], globalCropOrigin=[0, 0], globalFarCorner=[0, 0]):
+    localOrigin = np.subtract([globalCropOrigin[0], globalCropOrigin[-1]], [globalOrigin[0], globalOrigin[-1]])
+    localFarCorner = np.subtract([globalFarCorner[0], globalFarCorner[-1]], [globalOrigin[0], globalOrigin[-1]])
+    croppedGrid = grid[
+        localOrigin[0]:localFarCorner[0],
+        localOrigin[1]:localFarCorner[1]
+    ]
+    return croppedGrid
+
+
 def setBlock(x, y, z, material, properties=dict(), isBatched=True):
     interfaceUtils.setBlock(x, y, z, material, properties, isBatched)
 
