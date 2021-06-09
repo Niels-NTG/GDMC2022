@@ -1,7 +1,7 @@
 {
   "connectors": [
     {
-      "facing": 0,
+      "facing": 2,
       "transitionStructure": null,
       "nextStructure": [
         "lab_a/hub",

@@ -20,7 +20,7 @@ class SettlementBuilder:
             69,
             buildArea[1],
             buildArea[0] + buildArea[2],
-            69 + 12,
+            69 + 10,
             buildArea[1] + buildArea[3],
             "minecraft:air"
         )
