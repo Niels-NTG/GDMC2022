@@ -90,26 +90,19 @@ class Structure:
         ]
 
     def getOriginInWorldSpace(self):
-        return mapUtils.rotatePointAroundOrigin(
-            [self.x, self.y, self.z],
-            [
-                self.x + self.origin[0],
-                self.y + self.origin[1],
-                self.z + self.origin[2]
-            ],
-            self.rotation
+        return np.add(
+            self.origin,
+            [self.x, self.y, self.z]
         )
 
     def getFarCornerInWorldSpace(self):
-        worldSpaceOrigin = self.getOriginInWorldSpace()
-        return mapUtils.rotatePointAroundOrigin(
-            worldSpaceOrigin,
+        return np.add(
             [
-                worldSpaceOrigin[0] + (self.getSizeX() - self.origin[0]),
-                worldSpaceOrigin[1] + (self.getSizeY() - self.origin[1]),
-                worldSpaceOrigin[2] + (self.getSizeZ() - self.origin[2])
+                self.getSizeX() - self.origin[0],
+                self.getSizeY() - self.origin[1],
+                self.getSizeZ() - self.origin[2]
             ],
-            self.rotation
+            self.getOriginInWorldSpace()
         )
 
     def getHorizontalCenter(self):
