@@ -7,6 +7,10 @@ class SettlementBuilder:
 
     def __init__(self):
 
+        # DEBUG
+        # central RNG generator
+        rng = np.random.default_rng()
+
         buildArea = mapUtils.getBuildArea()
         startingPos = (10, 10)
 
@@ -34,6 +38,7 @@ class SettlementBuilder:
             buildArea=buildArea,
             heightMap=heightMap,
             mapOfStructures=mapOfStructures,
-            nodeStructureType='lab_a/hub'
+            nodeStructureType='lab_a/hub',
+            rng=rng
         )
         startingNode.place()

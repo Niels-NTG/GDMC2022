@@ -16,12 +16,11 @@ class Node:
                  heightMap=np.array([]),
                  mapOfStructures=np.array([]),
                  facing: int = None,
-                 nodeStructureType: str = ''
+                 nodeStructureType: str = '',
+                 rng=None
                  ):
 
-        # Create random generator for this Node instance.
-        self.rng = np.random.default_rng()
-
+        self.rng = rng
         self.buildArea = buildArea
         self.heightMap = heightMap
         self.mapOfStructures = mapOfStructures
@@ -162,7 +161,8 @@ class Node:
                     parentStructure=self.structure,
                     buildArea=self.buildArea,
                     heightMap=self.heightMap,
-                    mapOfStructures=self.mapOfStructures
+                    mapOfStructures=self.mapOfStructures,
+                    rng=self.rng
                 )
 
             # Build transition piece
