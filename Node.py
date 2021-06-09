@@ -14,12 +14,17 @@ class Node:
                  parentStructure: Structure = None,
                  buildArea=(0, 0, 0, 0),
                  heightMap=np.array([]),
+                 mapOfStructures=np.array([]),
                  facing: int = None,
                  nodeStructureType: str = ''
                  ):
 
         # Create random generator for this Node instance.
         self.rng = np.random.default_rng()
+
+        self.buildArea = buildArea
+        self.heightMap = heightMap
+        self.mapOfStructures = mapOfStructures
 
         # Construct file path
         self.nodeStructureType = nodeStructureType
@@ -43,10 +48,8 @@ class Node:
             grid=heightMap,
             globalOrigin=buildArea[:2],
             globalCropOrigin=self.structure.getOriginInWorldSpace(),
-            globalFarCorner=self.structure.getFarCornerInWorldSpace()
+            globalCropFarCorner=self.structure.getFarCornerInWorldSpace()
         )
-        self.heightMap = heightMap
-        self.buildArea = buildArea
 
         # Bind connectors list from structure's custom properties.
         if 'connectors' in self.structure.customProperties:
@@ -67,7 +70,29 @@ class Node:
     def isPlacable(self):
         if self.localHeightMap.shape != (self.structure.getSizeX(), self.structure.getSizeZ()):
             return False
+
+        structureMapCropped = mapUtils.getCroppedGrid(
+            grid=self.mapOfStructures,
+            globalOrigin=self.buildArea[:2],
+            globalCropOrigin=self.structure.getOriginInWorldSpace(),
+            globalCropFarCorner=self.structure.getFarCornerInWorldSpace()
+        )
+        if np.any(structureMapCropped > 0):
+            return False
+
         return True
+
+    # Set map of structures to a constant to indicate something is already been built here.
+    def _updateMapOfStructures(self, structure: Structure):
+        localOrigin, localFarCorner = mapUtils.getCrop(
+            globalOrigin=self.buildArea[:2],
+            globalCropOrigin=structure.getOriginInWorldSpace(),
+            globalCropFarCorner=structure.getFarCornerInWorldSpace()
+        )
+        self.mapOfStructures[
+            localOrigin[0]:localFarCorner[0],
+            localOrigin[1]:localFarCorner[1]
+        ] = 1
 
     # Run function for each post-processing step.
     def _doPostProcessing(self):
@@ -94,7 +119,7 @@ class Node:
                 pillarPosition[2]
             ]
             pillarPosition = np.add(pillarPosition, [self.structure.x, 0, self.structure.z])
-            mapUtils.fill(
+            mapUtils.keepFill(
                 *pillarPosition,
                 pillarPosition[0], groundLevel, pillarPosition[2],
                 pillar.get('material')
@@ -121,6 +146,7 @@ class Node:
             return
 
         self.structure.place()
+        self._updateMapOfStructures(self.structure)
 
         self._doPostProcessing()
 
@@ -135,7 +161,8 @@ class Node:
                     facing=facing,
                     parentStructure=self.structure,
                     buildArea=self.buildArea,
-                    heightMap=self.heightMap
+                    heightMap=self.heightMap,
+                    mapOfStructures=self.mapOfStructures
                 )
 
             # Build transition piece
