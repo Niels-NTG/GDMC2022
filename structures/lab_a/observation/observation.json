@@ -1,0 +1,13 @@
+{
+  "connectors": [],
+  "postProcessing": [
+    {
+      "placePillars": [
+        {
+          "pos": [1, 2],
+          "material": "iron_block"
+        }
+      ]
+    }
+  ]
+}
