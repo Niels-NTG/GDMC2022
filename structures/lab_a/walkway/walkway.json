@@ -2,6 +2,7 @@
   "connectors": [
     {
       "facing": 0,
+      "transitionStructure": "walkway_door",
       "nextStructure": [
         "lab_a/hub",
         "lab_a/walkway",
@@ -13,6 +14,7 @@
     },
     {
       "facing": 2,
+      "transitionStructure": "walkway_door",
       "nextStructure": [
         "lab_a/hub",
         "lab_a/walkway",
