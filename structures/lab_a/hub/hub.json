@@ -39,7 +39,7 @@
   ],
   "postProcessing": [
     {
-      "placePillars": [
+      "pillars": [
         {
           "pos": [1, 1],
           "material": "iron_block"

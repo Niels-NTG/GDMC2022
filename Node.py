@@ -17,7 +17,7 @@ class Node:
                  mapOfStructures=np.array([]),
                  facing: int = None,
                  nodeStructureType: str = '',
-                 rng=None
+                 rng=np.random.default_rng()
                  ):
 
         self.rng = rng
@@ -97,10 +97,12 @@ class Node:
     def _doPostProcessing(self):
         if isinstance(self.structure.customProperties.get('postProcessing'), list):
             for operations in self.structure.customProperties.get('postProcessing'):
-                if 'placePillars' in operations:
-                    self._placePillars(operations['placePillars'])
+                if 'pillars' in operations:
+                    self._placePillars(operations['pillars'])
+                if 'decorations' in operations:
+                    self._placeDecorations(operations['decorations'])
 
-    # Place pillars post-processing fucntion.
+    # Place pillars post-processing function.
     def _placePillars(self, pillars):
         nodePivot = self.structure.getHorizontalCenter()
         for pillar in pillars:
@@ -140,6 +142,44 @@ class Node:
                         }
                     )
 
+    # Place decoration structures post-processing function.
+    def _placeDecorations(self, decorations):
+        for decorationTypes in decorations:
+            # For each sub-list of decorations, pick only one.
+            decoration = self.rng.choice(decorationTypes)
+            if decoration is None:
+                continue
+
+            # Pick random orientation for decoration or one of the pre-defined directions.
+            facing = self.rng.integers(4)
+            if isinstance(decoration.get('facing'), list):
+                facing = self.rng.choice(decoration.get('facing'))
+
+            decorationOrigin = [0, 0, 0]
+            if isinstance(decoration.get('origin'), list) and len(decoration.get('origin')) == 3:
+                decorationOrigin = decoration.get('origin')
+
+            Structure(
+                structureFilePath=self.nodeStructureType + '/' + decoration.get('decorationStructure'),
+                rotation=(facing + self.structure.rotation) % 4,
+                x=self.structure.x + decorationOrigin[0],
+                y=self.structure.y + decorationOrigin[1],
+                z=self.structure.z + decorationOrigin[2]
+            ).place(includeAir=True)
+
+    # Place transition structure.
+    # This is a structure inserted inside of the node's structure to create a transition (eg. a doorway) to the next
+    # structure. These transition structures should have the same dimensions as the Node structure.
+    # Use minecraft:structure_void blocks in the transition structure to prevent replacing the entire node structure.
+    def _placeTransitionStructure(self, structureFile, facing):
+        Structure(
+            structureFilePath=self.nodeStructureType + '/' + structureFile,
+            rotation=facing,
+            x=self.structure.x,
+            y=self.structure.y,
+            z=self.structure.z
+        ).place(includeAir=True)
+
     def place(self):
         if not self.isPlacable():
             return
@@ -170,13 +210,7 @@ class Node:
                 # Only when it transitioning in the previous direction
                 # OR to transition to the next node, as long this is placable.
                 if connection.get('isPreviousDirection') or (connection.get('nextStructure') and nextNode.isPlacable()):
-                    Structure(
-                        structureFilePath=self.nodeStructureType + '/' + connection.get('transitionStructure'),
-                        rotation=facing,
-                        x=self.structure.x,
-                        y=self.structure.y,
-                        z=self.structure.z
-                    ).place(includeAir=True)
+                    self._placeTransitionStructure(connection.get('transitionStructure'), facing)
 
             if nextNode:
                 nextNode.place()

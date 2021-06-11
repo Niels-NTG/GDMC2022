@@ -2,7 +2,7 @@
   "connectors": [],
   "postProcessing": [
     {
-      "placePillars": [
+      "pillars": [
         {
           "pos": [1, 2],
           "material": "iron_block"
