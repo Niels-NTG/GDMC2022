@@ -8,6 +8,7 @@
     {
       // Direction connection is facing (0,1,2,3 = NORTH, EAST, SOUTH, WEST
       "facing": 0, // 0
+      "height": 0, // Height of connector
       // Structure to use to transition to next piece (eg. a doorway)
       "transitionStructure": "hub_door", // None
       // List of potential next structures to connect to the this one. If null gets picked or it's an empty list

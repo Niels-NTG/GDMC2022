@@ -1,25 +1,29 @@
 {
   "connectors": [
     {
-      "facing": 1,
-      "transitionStructure": "walkway_corner_r_door",
+      "facing": 0,
+      "height": 0,
+      "transitionStructure": null,
       "nextStructure": [
         "lab_a/hub",
         "lab_a/walkway",
         "lab_a/observation",
         "lab_a/ladder",
-        "lab_a/stairs_up"
+        "lab_a/walkway_corner_l",
+        "lab_a/walkway_corner_r"
       ]
     },
     {
       "facing": 2,
-      "transitionStructure": "walkway_corner_r_door",
+      "height": -1,
+      "transitionStructure": null,
       "nextStructure": [
         "lab_a/hub",
         "lab_a/walkway",
         "lab_a/observation",
         "lab_a/ladder",
-        "lab_a/stairs_up"
+        "lab_a/walkway_corner_l",
+        "lab_a/walkway_corner_r"
       ]
     }
   ],
@@ -27,10 +31,11 @@
     {
       "pillars": [
         {
-          "pos": [2, 2],
+          "pos": [3, 2],
           "material": "iron_block"
         }
       ]
     }
-  ]
+  ],
+  "offset": [0, -1, 0]
 }

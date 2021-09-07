@@ -149,6 +149,13 @@ class Structure:
             customEffectiveSpace = self.customProperties['effectiveSpace']
             self.setOrigin(*customEffectiveSpace[:3])
             self.setSize(*customEffectiveSpace[3:])
+        if 'offset' in self.customProperties:
+            customOffset = self.customProperties['offset']
+            self.setPosition(
+                self.x + customOffset[0],
+                self.y + customOffset[1],
+                self.z + customOffset[2]
+            )
 
     def _getBlockMaterial(self, block):
         blockMaterial = self.file["palette"][block["state"].value]['Name'].value

@@ -6,6 +6,8 @@
       "nextStructure": [
         "lab_a/walkway",
         "lab_a/observation",
+        "lab_a/stairs_up",
+        "lab_a/stairs_down",
         null
       ]
     },
@@ -15,6 +17,8 @@
       "nextStructure": [
         "lab_a/walkway",
         "lab_a/observation",
+        "lab_a/stairs_up",
+        "lab_a/stairs_down",
         null
       ]
     },
@@ -24,6 +28,8 @@
       "nextStructure": [
         "lab_a/walkway",
         "lab_a/observation",
+        "lab_a/stairs_up",
+        "lab_a/stairs_down",
         null
       ]
     },
@@ -33,6 +39,8 @@
       "nextStructure": [
         "lab_a/walkway",
         "lab_a/observation",
+        "lab_a/stairs_up",
+        "lab_a/stairs_down",
         null
       ]
     }

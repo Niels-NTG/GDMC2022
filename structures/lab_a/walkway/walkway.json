@@ -9,7 +9,9 @@
         "lab_a/observation",
         "lab_a/ladder",
         "lab_a/walkway_corner_l",
-        "lab_a/walkway_corner_r"
+        "lab_a/walkway_corner_r",
+        "lab_a/stairs_up",
+        "lab_a/stairs_down"
       ]
     },
     {
@@ -21,7 +23,9 @@
         "lab_a/observation",
         "lab_a/ladder",
         "lab_a/walkway_corner_l",
-        "lab_a/walkway_corner_r"
+        "lab_a/walkway_corner_r",
+        "lab_a/stairs_up",
+        "lab_a/stairs_down"
       ]
     }
   ],

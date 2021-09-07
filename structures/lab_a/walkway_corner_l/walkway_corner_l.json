@@ -7,7 +7,9 @@
         "lab_a/hub",
         "lab_a/walkway",
         "lab_a/observation",
-        "lab_a/ladder"
+        "lab_a/ladder",
+        "lab_a/stairs_up",
+        "lab_a/stairs_down"
       ]
     },
     {
@@ -17,7 +19,9 @@
         "lab_a/hub",
         "lab_a/walkway",
         "lab_a/observation",
-        "lab_a/ladder"
+        "lab_a/ladder",
+        "lab_a/stairs_up",
+        "lab_a/stairs_down"
       ]
     }
   ],

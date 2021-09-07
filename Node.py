@@ -191,6 +191,12 @@ class Node:
 
         for connection in self.connectors:
             facing = (connection.get('facing') + self.structure.rotation) % 4
+
+            # Determine height of next node.
+            nextHeight = self.structure.y
+            if connection.get('height'):
+                nextHeight = self.structure.y + connection.get('height')
+
             nextNode = None
 
             if connection.get('nextStructure'):
@@ -198,6 +204,7 @@ class Node:
                 nextNode = Node(
                     nodeStructureType=connection.get('nextStructure'),
                     facing=facing,
+                    y=nextHeight,
                     parentStructure=self.structure,
                     buildArea=self.buildArea,
                     heightMap=self.heightMap,

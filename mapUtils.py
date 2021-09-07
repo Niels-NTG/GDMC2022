@@ -103,25 +103,25 @@ def getNextPosition(facing, currentBox=None, nextBox=None):
     if facing == 0:
         return [
             currentBox[0] + currentBox[3],
-            currentBox[1],
+            nextBox[1],
             currentBox[2]
         ]
     elif facing == 1:
         return [
             currentBox[0],
-            currentBox[1],
+            nextBox[1],
             currentBox[2] + currentBox[5]
         ]
     elif facing == 2:
         return [
             currentBox[0] - nextBox[3],
-            currentBox[1],
+            nextBox[1],
             currentBox[2]
         ]
     elif facing == 3:
         return [
             currentBox[0],
-            currentBox[1],
+            nextBox[1],
             currentBox[2] - nextBox[5]
         ]
 
