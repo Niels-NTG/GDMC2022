@@ -1,8 +1,9 @@
 import numpy as np
-import re
 
+import globals
 import mapUtils
 from Structure import Structure
+from StructurePrototype import StructurePrototype
 
 
 class Node:
@@ -16,7 +17,7 @@ class Node:
                  heightMap=np.array([]),
                  mapOfStructures=np.array([]),
                  facing: int = None,
-                 nodeStructureType: str = '',
+                 nodeStructurePrototype: StructurePrototype = None,
                  rng=np.random.default_rng()
                  ):
 
@@ -25,13 +26,9 @@ class Node:
         self.heightMap = heightMap
         self.mapOfStructures = mapOfStructures
 
-        # Construct file path
-        self.nodeStructureType = nodeStructureType
-        nodeStructureFile = re.sub(r"^.+/", "", nodeStructureType)
-
         # Create structure instance.
         self.structure = Structure(
-            structureFilePath=nodeStructureType + "/" + nodeStructureFile,
+            structurePrototype=nodeStructurePrototype,
             x=x, y=y, z=z,
             rotation=Structure.ROTATE_NORTH if facing is None else facing
         )
@@ -58,6 +55,7 @@ class Node:
         # Pick a next node for each connector
         for connection in self.connectors:
             # If current node has a defined facing direciton and it's the opposite of the connection's direction:
+
             if facing is not None and (connection.get('facing') + facing + 2) % 4 == facing:
                 connection['isPreviousDirection'] = True
                 connection['nextStructure'] = None
@@ -144,28 +142,27 @@ class Node:
 
     # Place decoration structures post-processing function.
     def _placeDecorations(self, decorations):
-        for decorationTypes in decorations:
-            # For each sub-list of decorations, pick only one.
-            decoration = self.rng.choice(decorationTypes)
-            if decoration is None:
-                continue
+        # For each list of decorations, pick only one.
+        decoration = self.rng.choice(decorations)
+        if decoration is None:
+            return
 
-            # Pick random orientation for decoration or one of the pre-defined directions.
-            facing = self.rng.integers(4)
-            if isinstance(decoration.get('facing'), list):
-                facing = self.rng.choice(decoration.get('facing'))
+        # Pick random orientation for decoration or one of the pre-defined directions.
+        facing = self.rng.integers(4)
+        if isinstance(decoration.get('facing'), list):
+            facing = self.rng.choice(decoration.get('facing'))
 
-            decorationOrigin = [0, 0, 0]
-            if isinstance(decoration.get('origin'), list) and len(decoration.get('origin')) == 3:
-                decorationOrigin = decoration.get('origin')
+        decorationOrigin = [0, 0, 0]
+        if isinstance(decoration.get('origin'), list) and len(decoration.get('origin')) == 3:
+            decorationOrigin = decoration.get('origin')
 
-            Structure(
-                structureFilePath=self.nodeStructureType + '/' + decoration.get('decorationStructure'),
-                rotation=(facing + self.structure.rotation) % 4,
-                x=self.structure.x + decorationOrigin[0],
-                y=self.structure.y + decorationOrigin[1],
-                z=self.structure.z + decorationOrigin[2]
-            ).place(includeAir=True)
+        Structure(
+            structurePrototype=self.structure.prototype.decorationStructures[decoration.get('decorationStructure')],
+            rotation=(facing + self.structure.rotation) % 4,
+            x=self.structure.x + decorationOrigin[0],
+            y=self.structure.y + decorationOrigin[1],
+            z=self.structure.z + decorationOrigin[2]
+        ).place(includeAir=True)
 
     # Place transition structure.
     # This is a structure inserted inside of the node's structure to create a transition (eg. a doorway) to the next
@@ -173,7 +170,7 @@ class Node:
     # Use minecraft:structure_void blocks in the transition structure to prevent replacing the entire node structure.
     def _placeTransitionStructure(self, structureFile, facing):
         Structure(
-            structureFilePath=self.nodeStructureType + '/' + structureFile,
+            structurePrototype=self.structure.prototype.transitionStructures[structureFile],
             rotation=facing,
             x=self.structure.x,
             y=self.structure.y,
@@ -202,7 +199,7 @@ class Node:
             if connection.get('nextStructure'):
                 # Init and place next node
                 nextNode = Node(
-                    nodeStructureType=connection.get('nextStructure'),
+                    nodeStructurePrototype=globals.structurePrototypes[connection.get('nextStructure')],
                     facing=facing,
                     y=nextHeight,
                     parentStructure=self.structure,

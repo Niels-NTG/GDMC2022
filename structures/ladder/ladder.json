@@ -4,8 +4,8 @@
       "facing": 0,
       "transitionStructure": "ladder_door",
       "nextStructure": [
-        "lab_a/walkway",
-        "lab_a/observation",
+        "walkway",
+        "observation",
         null
       ]
     },
@@ -13,8 +13,8 @@
       "facing": 2,
       "transitionStructure": "ladder_door",
       "nextStructure": [
-        "lab_a/walkway",
-        "lab_a/observation",
+        "walkway",
+        "observation",
         null
       ]
     }

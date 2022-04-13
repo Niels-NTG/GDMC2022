@@ -1,9 +1,10 @@
 from SettlementBuilder import SettlementBuilder
 import interfaceUtils
+import globals
 
+
+globals.initialize()
 
 SettlementBuilder()
-
-# TODO load in all Structures files before starting. Only apply rotation on placement.
 
 interfaceUtils.sendBlocks()

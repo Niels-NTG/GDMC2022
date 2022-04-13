@@ -4,22 +4,22 @@
       "facing": 1,
       "transitionStructure": "walkway_corner_r_door",
       "nextStructure": [
-        "lab_a/hub",
-        "lab_a/walkway",
-        "lab_a/observation",
-        "lab_a/ladder",
-        "lab_a/stairs_up"
+        "hub",
+        "walkway",
+        "observation",
+        "ladder",
+        "stairs_up"
       ]
     },
     {
       "facing": 2,
       "transitionStructure": "walkway_corner_r_door",
       "nextStructure": [
-        "lab_a/hub",
-        "lab_a/walkway",
-        "lab_a/observation",
-        "lab_a/ladder",
-        "lab_a/stairs_up"
+        "hub",
+        "walkway",
+        "observation",
+        "ladder",
+        "stairs_up"
       ]
     }
   ],

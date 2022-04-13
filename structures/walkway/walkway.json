@@ -1,0 +1,52 @@
+{
+  "connectors": [
+    {
+      "facing": 0,
+      "transitionStructure": "walkway_door",
+      "nextStructure": [
+        "hub",
+        "walkway",
+        "observation",
+        "ladder",
+        "walkway_corner_l",
+        "walkway_corner_r",
+        "stairs_up",
+        "stairs_down"
+      ]
+    },
+    {
+      "facing": 2,
+      "transitionStructure": "walkway_door",
+      "nextStructure": [
+        "hub",
+        "walkway",
+        "observation",
+        "ladder",
+        "walkway_corner_l",
+        "walkway_corner_r",
+        "stairs_up",
+        "stairs_down"
+      ]
+    }
+  ],
+  "postProcessing": [
+    {
+      "pillars": [
+        {
+          "pos": [2, 2],
+          "material": "iron_block"
+        }
+      ]
+    },
+    {
+      "decorations": [
+        {
+          "decorationStructure": "walkway_balcony",
+          "facing": [1, 3],
+          "origin": [0, 0, 0]
+        },
+        null
+      ]
+    }
+  ]
+}

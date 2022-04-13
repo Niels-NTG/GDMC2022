@@ -1,10 +1,9 @@
+import copy
+
 import numpy as np
-from nbt import nbt
+from StructurePrototype import StructurePrototype
 import interfaceUtils
 import mapUtils
-import os
-import json
-
 
 # With this class you can load in an NBT-encoded Minecraft Structure file
 # (https://minecraft.fandom.com/wiki/Structure_Block_file_format) and place them in the world.
@@ -16,33 +15,29 @@ class Structure:
     ROTATE_SOUTH = 2
     ROTATE_WEST = 3
     ROTATIONS = ["north", "east", "south", "west"]
-    rotation = ROTATE_NORTH
-
-    origin = [0, 0, 0]
-
-    customProperties = {}
 
     debug = False
 
     def __init__(self,
-                 structureFilePath: str,
+                 structurePrototype: StructurePrototype,
                  x: int = 0, y: int = 0, z: int = 0,
                  rotation: int = ROTATE_NORTH,
                  rotateAroundCenter: bool = True
                  ):
-        self.file = nbt.NBTFile('structures/' + structureFilePath + ".nbt", "rb")
+        self.prototype = structurePrototype
+
+        self.file = structurePrototype.nbt
 
         self.x = x
         self.y = y
         self.z = z
+        self.origin = [0, 0, 0]
         self.rotation = rotation
 
         self.rotateAroundCenter = rotateAroundCenter
 
-        if os.path.isfile('structures/' + structureFilePath + '.json'):
-            with open('structures/' + structureFilePath + '.json') as JSONfile:
-                self.customProperties = json.load(JSONfile)
-                self._applyCustomProperties()
+        self.customProperties = copy.deepcopy(structurePrototype.customProperties)
+        self._applyCustomProperties()
 
         self.materialReplacements = dict()
 

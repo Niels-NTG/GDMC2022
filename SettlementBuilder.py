@@ -1,11 +1,16 @@
 import numpy as np
 import mapUtils
 from Node import Node
+import globals
 
 
 class SettlementBuilder:
 
     def __init__(self):
+
+        print(globals.structurePrototypes)
+
+        # TODO modify mapOfStructures to deal with "loops" (waveform collapse?)
 
         # DEBUG
         # central RNG generator
@@ -38,7 +43,7 @@ class SettlementBuilder:
             buildArea=buildArea,
             heightMap=heightMap,
             mapOfStructures=mapOfStructures,
-            nodeStructureType='lab_a/hub',
+            nodeStructurePrototype=globals.structurePrototypes['hub'],
             rng=rng
         )
         startingNode.place()

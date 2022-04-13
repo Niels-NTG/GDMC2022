@@ -5,12 +5,12 @@
       "height": 1,
       "transitionStructure": null,
       "nextStructure": [
-        "lab_a/hub",
-        "lab_a/walkway",
-        "lab_a/observation",
-        "lab_a/ladder",
-        "lab_a/walkway_corner_l",
-        "lab_a/walkway_corner_r"
+        "hub",
+        "walkway",
+        "observation",
+        "ladder",
+        "walkway_corner_l",
+        "walkway_corner_r"
       ]
     },
     {
@@ -18,12 +18,12 @@
       "height": 0,
       "transitionStructure": null,
       "nextStructure": [
-        "lab_a/hub",
-        "lab_a/walkway",
-        "lab_a/observation",
-        "lab_a/ladder",
-        "lab_a/walkway_corner_l",
-        "lab_a/walkway_corner_r"
+        "hub",
+        "walkway",
+        "observation",
+        "ladder",
+        "walkway_corner_l",
+        "walkway_corner_r"
       ]
     }
   ],

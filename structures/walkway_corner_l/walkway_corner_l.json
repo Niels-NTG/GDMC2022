@@ -4,24 +4,24 @@
       "facing": 2,
       "transitionStructure": "walkway_corner_l_door",
       "nextStructure": [
-        "lab_a/hub",
-        "lab_a/walkway",
-        "lab_a/observation",
-        "lab_a/ladder",
-        "lab_a/stairs_up",
-        "lab_a/stairs_down"
+        "hub",
+        "walkway",
+        "observation",
+        "ladder",
+        "stairs_up",
+        "stairs_down"
       ]
     },
     {
       "facing": 3,
       "transitionStructure": "walkway_corner_l_door",
       "nextStructure": [
-        "lab_a/hub",
-        "lab_a/walkway",
-        "lab_a/observation",
-        "lab_a/ladder",
-        "lab_a/stairs_up",
-        "lab_a/stairs_down"
+        "hub",
+        "walkway",
+        "observation",
+        "ladder",
+        "stairs_up",
+        "stairs_down"
       ]
     }
   ],
