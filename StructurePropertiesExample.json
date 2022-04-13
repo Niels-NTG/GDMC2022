@@ -14,9 +14,9 @@
       // List of potential next structures to connect to the this one. If null gets picked or it's an empty list
       // means that this becomes a leaf in the network.
       "nextStructure": [
-        "lab_a/walkway",
-        "lab_a/walkway_corner",
-        "lab_a/observation",
+        "walkway",
+        "walkway_corner",
+        "observation",
         null
       ] // []
     },
@@ -24,9 +24,9 @@
       "facing": 1,
       "transitionStructure": "hub_door",
       "nextStructure": [
-        "lab_a/walkway",
-        "lab_a/walkway_corner",
-        "lab_a/observation",
+        "walkway",
+        "walkway_corner",
+        "observation",
         null
       ]
     }
@@ -46,14 +46,12 @@
     // Place decorative structures using the same placement rules as "transitionStructure"
     {
       "decorations": [
-        [
-          {
-            "decorationStructure": "walkway_balcony", // Name of structure for use as decoration
-            "facing": [1, 3], // Directions this decoration is allowed to face.
-            "origin": [0, 0, 0] // If null, assume origin of decoration structure is 0, 0, 0 from its parent.
-          },
-          null
-        ]
+        {
+          "decorationStructure": "walkway_balcony", // Name of structure for use as decoration
+          "facing": [1, 3], // Directions this decoration is allowed to face.
+          "origin": [0, 0, 0] // If null, assume origin of decoration structure is 0, 0, 0 from its parent.
+        },
+        null
       ]
     }
   ]
