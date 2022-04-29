@@ -29,6 +29,14 @@ def requestBuildArea():
         return -1
 
 
+def getChunks(x, z, dx, dz):
+    url = f'http://localhost:9000/chunks?x={x}&z={z}&dx={dx}&dz={dz}'
+    response = requests.get(url, headers={"Accept": 'application/octet-stream'})
+    if response.status_code >= 400:
+        print(f"Error: {response.text}")
+    return response.content
+
+
 def runCommand(command):
     """**Executes one or multiple minecraft commands (separated by newlines).**"""
     print("running cmd " + command)
@@ -71,15 +79,8 @@ def setBlock(x, y, z, material, properties, isBatched=True):
         response = session.put(url, material + serialisedProperties)
     except ConnectionError:
         return "0"
-    return response.text
     print("{}, {}, {}: {} - {}".format(x, y, z, response.status_code, response.text))
-
-
-# Create solid shape filling the given area.
-def fill(fromX, fromY, fromZ, toX, toY, toZ, material, fillMode="replace"):
-    return runCommand(
-        "fill %d %d %d %d %d %d %s %s" % (fromX, fromY, fromZ, toX, toY, toZ, material, fillMode)
-    )
+    return response.text
 
 
 # --------------------------------------------------------- block buffers

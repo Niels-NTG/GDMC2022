@@ -2,8 +2,8 @@ import copy
 
 import numpy as np
 from StructurePrototype import StructurePrototype
-import interfaceUtils
-import mapUtils
+import interface
+import mapTools
 
 # With this class you can load in an NBT-encoded Minecraft Structure file
 # (https://minecraft.fandom.com/wiki/Structure_Block_file_format) and place them in the world.
@@ -190,7 +190,7 @@ class Structure:
             return currentPosition
 
         pivot = self.origin if not self.rotateAroundCenter else self.getHorizontalCenter()
-        return mapUtils.rotatePointAroundOrigin(pivot, currentPosition, self.rotation)
+        return mapTools.rotatePointAroundOrigin(pivot, currentPosition, self.rotation)
 
     def getMaterialList(self):
         materials = []
@@ -213,17 +213,17 @@ class Structure:
 
             blockPosition = np.add(self._applyRotation(block), [self.x, self.y, self.z])
             blockProperties = self._getBlockProperties(block)
-            mapUtils.setBlock(blockPosition[0], blockPosition[1], blockPosition[2], blockMaterial, blockProperties)
+            mapTools.setBlock(blockPosition[0], blockPosition[1], blockPosition[2], blockMaterial, blockProperties)
 
-        interfaceUtils.sendBlocks()
+        interface.sendBlocks()
 
         if self.debug:
-            mapUtils.fill(
+            mapTools.fill(
                 *self.getOriginInWorldSpace(),
                 *self.getOriginInWorldSpace(),
                 "minecraft:orange_wool"
             )
-            mapUtils.fill(
+            mapTools.fill(
                 *self.getFarCornerInWorldSpace(),
                 *self.getFarCornerInWorldSpace(),
                 "minecraft:purple_wool"

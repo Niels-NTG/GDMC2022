@@ -1,5 +1,5 @@
 import numpy as np
-import interfaceUtils
+import interface
 from worldLoader import WorldSlice
 
 
@@ -8,7 +8,7 @@ def getBuildArea(area=(0, 0, 128, 128)):
 
     # see if a build area has been specified
     # you can set a build area in minecraft using the /setbuildarea command
-    serverBuildArea = interfaceUtils.requestBuildArea()
+    serverBuildArea = interface.requestBuildArea()
     if serverBuildArea != -1:
         x1 = serverBuildArea["xFrom"]
         z1 = serverBuildArea["zFrom"]
@@ -16,13 +16,14 @@ def getBuildArea(area=(0, 0, 128, 128)):
         z2 = serverBuildArea["zTo"]
         area = (x1, z1, x2 - x1, z2 - z1)
 
+    # TODO maybe create a global list of chunks here?
     print("working in area xz s%s" % (str(area)))
     return area
 
 
 # TODO find out how to make the same function that counts ocean floor as well.
 def calcGoodHeightmap(buildArea):
-    worldSlice = WorldSlice(rect=(*buildArea,))
+    worldSlice = WorldSlice(rect=buildArea)
 
     hm_mbnl = worldSlice.heightmaps["MOTION_BLOCKING_NO_LEAVES"]
     heightmapNoTrees = hm_mbnl[:]
@@ -33,7 +34,10 @@ def calcGoodHeightmap(buildArea):
             while True:
                 y = heightmapNoTrees[x, z]
                 block = worldSlice.getBlockAt(
-                    (area[0] + x, y - 1, area[1] + z))
+                    x=area[0] + x,
+                    y=y - 1,
+                    z=area[1] + z
+                )
                 if block[-4:] == '_log':
                     heightmapNoTrees[x, z] -= 1
                 else:
@@ -65,12 +69,12 @@ def getCroppedGrid(grid=np.array([]), globalOrigin=(0, 0), globalCropOrigin=(0, 
 def setBlock(x, y, z, material, properties=None, isBatched=True):
     if properties is None:
         properties = dict()
-    interfaceUtils.setBlock(x, y, z, material, properties, isBatched)
+    interface.setBlock(x, y, z, material, properties, isBatched)
 
 
 # Create solid shape filling the given area.
 def fill(fromX, fromY, fromZ, toX, toY, toZ, material, fillMode="replace"):
-    return interfaceUtils.runCommand(
+    return interface.runCommand(
         "fill %d %d %d %d %d %d %s %s" % (fromX, fromY, fromZ, toX, toY, toZ, material, fillMode)
     )
 

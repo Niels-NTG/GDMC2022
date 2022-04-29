@@ -1,5 +1,5 @@
 from SettlementBuilder import SettlementBuilder
-import interfaceUtils
+import interface
 import globals
 
 
@@ -7,4 +7,4 @@ globals.initialize()
 
 SettlementBuilder()
 
-interfaceUtils.sendBlocks()
+interface.sendBlocks()

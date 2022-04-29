@@ -1,5 +1,5 @@
 import numpy as np
-import mapUtils
+import mapTools
 from Node import Node
 import globals
 
@@ -16,11 +16,12 @@ class SettlementBuilder:
         # central RNG generator
         rng = np.random.default_rng()
 
-        buildArea = mapUtils.getBuildArea()
+        # /setbuildarea ~ ~ ~ ~32 ~12 ~32
+        buildArea = mapTools.getBuildArea()
         startingPos = (10, 10)
 
         # DEBUG
-        mapUtils.fill(
+        mapTools.fill(
             buildArea[0],
             69,
             buildArea[1],
@@ -31,7 +32,7 @@ class SettlementBuilder:
         )
 
         # Height map of the build area.
-        heightMap = mapUtils.calcGoodHeightmap(buildArea)
+        heightMap = mapTools.calcGoodHeightmap(buildArea)
 
         # Map of structures built in the build area.
         mapOfStructures = np.full(shape=heightMap.shape, fill_value=0)

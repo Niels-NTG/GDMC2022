@@ -1,7 +1,7 @@
 import numpy as np
 
 import globals
-import mapUtils
+import mapTools
 from Structure import Structure
 from StructurePrototype import StructurePrototype
 
@@ -36,11 +36,11 @@ class Node:
         # Translate structure position depending on facing direction.
         if facing is not None and parentStructure is not None:
             self.structure.setPosition(
-                *mapUtils.getNextPosition(facing, parentStructure.getBox(), self.structure.getBox())
+                *mapTools.getNextPosition(facing, parentStructure.getBox(), self.structure.getBox())
             )
 
         # Create cropped heightmap for the ground underneath the structure.
-        self.localHeightMap = mapUtils.getCroppedGrid(
+        self.localHeightMap = mapTools.getCroppedGrid(
             grid=heightMap,
             globalOrigin=buildArea[:2],
             globalCropOrigin=self.structure.getOriginInWorldSpace(),
@@ -68,7 +68,7 @@ class Node:
         if self.localHeightMap.shape != (self.structure.getSizeX(), self.structure.getSizeZ()):
             return False
 
-        structureMapCropped = mapUtils.getCroppedGrid(
+        structureMapCropped = mapTools.getCroppedGrid(
             grid=self.mapOfStructures,
             globalOrigin=self.buildArea[:2],
             globalCropOrigin=self.structure.getOriginInWorldSpace(),
@@ -81,7 +81,7 @@ class Node:
 
     # Set map of structures to a constant to indicate something is already been built here.
     def _updateMapOfStructures(self, structure: Structure):
-        localOrigin, localFarCorner = mapUtils.getCrop(
+        localOrigin, localFarCorner = mapTools.getCrop(
             globalOrigin=self.buildArea[:2],
             globalCropOrigin=structure.getOriginInWorldSpace(),
             globalCropFarCorner=structure.getFarCornerInWorldSpace()
@@ -104,7 +104,7 @@ class Node:
     def _placePillars(self, pillars):
         nodePivot = self.structure.getHorizontalCenter()
         for pillar in pillars:
-            pillarPosition = mapUtils.rotatePointAroundOrigin(
+            pillarPosition = mapTools.rotatePointAroundOrigin(
                 nodePivot,
                 [
                     pillar['pos'][0],
@@ -118,7 +118,7 @@ class Node:
                 pillarPosition[2]
             ]
             pillarPosition = np.add(pillarPosition, [self.structure.x, 0, self.structure.z])
-            mapUtils.keepFill(
+            mapTools.keepFill(
                 *pillarPosition,
                 pillarPosition[0], groundLevel, pillarPosition[2],
                 pillar.get('material')
@@ -126,13 +126,13 @@ class Node:
             # If pillar has a facing direction for a ladder defined, put a ladder on this face of the pillar.
             if pillar.get('ladder') is not None:
                 ladderRotation = (self.structure.rotation + pillar.get('ladder')) % 4
-                ladderPosition = mapUtils.rotatePointAroundOrigin(
+                ladderPosition = mapTools.rotatePointAroundOrigin(
                     pillarPosition,
                     np.add(pillarPosition, [0, 0, -1]),
                     ladderRotation
                 )
                 for ladderY in range(groundLevel, self.structure.y):
-                    mapUtils.setBlock(
+                    mapTools.setBlock(
                         ladderPosition[0], ladderY, ladderPosition[2],
                         'ladder',
                         {
