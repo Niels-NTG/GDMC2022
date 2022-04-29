@@ -1,6 +1,7 @@
 import numpy as np
 import interface
 from worldLoader import WorldSlice
+from globals import AXES
 
 
 def getBuildArea(area=(0, 0, 128, 128)):
@@ -60,9 +61,9 @@ def getCrop(globalOrigin=(0, 0), globalCropOrigin=(0, 0), globalCropFarCorner=(0
 def getCroppedGrid(grid=np.array([]), globalOrigin=(0, 0), globalCropOrigin=(0, 0), globalCropFarCorner=(0, 0)):
     localOrigin, localFarCorner = getCrop(globalOrigin, globalCropOrigin, globalCropFarCorner)
     croppedGrid = grid[
-        localOrigin[0]:localFarCorner[0],
-        localOrigin[1]:localFarCorner[1]
-    ]
+                  localOrigin[0]:localFarCorner[0],
+                  localOrigin[1]:localFarCorner[1]
+                  ]
     return croppedGrid
 
 
@@ -97,6 +98,102 @@ def outlineFill(fromX, fromY, fromZ, toX, toY, toZ, material):
 # Replace all blocks in the given area with air.
 def destroy(fromX, fromY, fromZ, toX, toY, toZ):
     return fill(fromX, fromY, fromZ, toX, toY, toZ, "minecraft:air", fillMode="destroy")
+
+
+def placePerimeter(fromX, fromY, fromZ, toX, toY, toZ, material, fillMode="replace"):
+    fill(fromX, fromY, fromZ, fromX, toY, toZ, material, fillMode)
+    fill(fromX, fromY, fromZ, toX, toY, fromZ, material, fillMode)
+    fill(toX, fromY, fromZ, toX, toY, toZ, material, fillMode)
+    fill(fromX, fromY, toZ, toX, toY, toZ, material, fillMode)
+
+
+def placeLine(fromX, fromY, fromZ, toX, toY, toZ, material):
+    dimension, flatSides = getDimension(fromX, fromY, fromZ, toX, toY, toZ)
+    if dimension == 0:
+        interface.setBlock(fromX, fromY, fromZ, material, None)
+    elif dimension == 1:
+        fill(fromX, fromY, fromZ, toX, toY, toZ, material)
+    elif dimension == 2:
+        points = line3d(fromX, fromY, fromZ, toX, toY, toZ)
+        for point in points:
+            interface.setBlock(point[0], point[1], point[2], material, None)
+
+
+def line3d(fromX, fromY, fromZ, toX, toY, toZ):
+    def ifGreaterPosElseNegative(a, b):
+        return 1 if a > b else -1
+
+    def bresenHamLineNextPoint(x, y, z, xs, ys, zs, dx, dy, dz, p1, p2):
+        x += xs
+        if p1 >= 0:
+            y += ys
+            p1 -= 2 * dx
+        if p2 >= 0:
+            z += zs
+            p2 -= 2 * dx
+        p1 += 2 * dy
+        p2 += 2 * dz
+        return x, y, z, p1, p2
+
+    points = set()
+    points.add((fromX, fromY, fromZ))
+    dx = abs(toX - fromX)
+    dy = abs(toY - fromY)
+    dz = abs(toZ - fromZ)
+    xs = ifGreaterPosElseNegative(toX, fromX)
+    ys = ifGreaterPosElseNegative(toY, fromY)
+    zs = ifGreaterPosElseNegative(toZ, fromZ)
+
+    # Driving axis is X-axis"
+    if dx >= dy and dx >= dz:
+        p1 = 2 * dy - dx
+        p2 = 2 * dz - dx
+        while fromX != toX:
+            fromX, fromY, fromZ, p1, p2 = bresenHamLineNextPoint(
+                fromX, fromY, fromZ,
+                xs, ys, zs,
+                dx, dy, dz,
+                p1, p2
+            )
+            points.add((fromX, fromY, fromZ))
+
+    # Driving axis is Y-axis"
+    elif dy >= dx and dy >= dz:
+        p1 = 2 * dx - dy
+        p2 = 2 * dz - dy
+        while fromY != toY:
+            fromY, fromX, fromZ, p1, p2 = bresenHamLineNextPoint(
+                fromY, fromX, fromZ,
+                ys, xs, zs,
+                dy, dx, dz,
+                p1, p2
+            )
+            points.add((fromX, fromY, fromZ))
+
+    # Driving axis is Z-axis"
+    else:
+        p1 = 2 * dy - dz
+        p2 = 2 * dx - dz
+        while fromZ != toZ:
+            fromZ, fromX, fromY, p1, p2 = bresenHamLineNextPoint(fromZ, fromX, fromY,
+                                                                 zs, xs, ys,
+                                                                 dz, dx, dy,
+                                                                 p1, p2)
+            points.add((fromX, fromY, fromZ))
+
+    return points
+
+
+def getDimension(fromX, fromY, fromZ, toX, toY, toZ):
+    if (fromX, fromY, fromZ) == (toX, toY, toZ):
+        return 0, list(AXES)
+    # NOTE: if dimension needs to be known, return isdifferent
+    isflat = np.subtract((fromX, fromY, fromZ), (toX, toY, toZ)) == 0
+    flatSides = []
+    flatSides += ['x'] if isflat[0] else []
+    flatSides += ['y'] if isflat[1] else []
+    flatSides += ['z'] if isflat[2] else []
+    return 3 - isflat.sum(), flatSides
 
 
 def getNextPosition(facing, currentBox=None, nextBox=None):

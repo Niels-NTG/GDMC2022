@@ -18,7 +18,12 @@ class SettlementBuilder:
 
         # /setbuildarea ~ ~ ~ ~32 ~12 ~32
         buildArea = mapTools.getBuildArea()
-        startingPos = (10, 10)
+
+        # Pick starting position somewhere in the middle of the build area
+        startingPos = (
+            int(rng.normal(loc=buildArea[2] / 2, scale=buildArea[2] / 4)),
+            int(rng.normal(loc=buildArea[3] / 2, scale=buildArea[3] / 4)),
+        )
 
         # DEBUG
         mapTools.fill(
@@ -29,6 +34,17 @@ class SettlementBuilder:
             69 + 10,
             buildArea[1] + buildArea[3],
             "minecraft:air"
+        )
+
+        # DEBUG
+        mapTools.placePerimeter(
+            buildArea[0],
+            68,
+            buildArea[1],
+            buildArea[0] + buildArea[2],
+            68,
+            buildArea[1] + buildArea[3],
+            'minecraft:orange_wool'
         )
 
         # Height map of the build area.
