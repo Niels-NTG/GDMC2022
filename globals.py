@@ -439,9 +439,61 @@ LIQUIDS = (
     'minecraft:water', 'minecraft:flowing_water',
     'minecraft:lava', 'minecraft:flowing_lava'
 )
-# TODO: SOILS
+SOILS = (
+    'minecraft:clay',
+    'minecraft:dirt',
+    'minecraft:coarse_dirt',
+    'minecraft:podzol',
+    'minecraft:farmland',
+    'minecraft:grass_block',
+    'minecraft:gravel',
+    'minecraft:mycelium',
+    'minecraft:sand',
+    'minecraft:red_sand',
+    'minecraft:snow_block',
+    'minecraft:snow',
+    'minecraft:soul_sand',
+    'minecraft:dirt_path',
+    'minecraft:white_concrete_powder',
+    'minecraft:orange_concrete_powder',
+    'minecraft:magenta_concrete_powder',
+    'minecraft:light_blue_concrete_powder',
+    'minecraft:yellow_concrete_powder',
+    'minecraft:lime_concrete_powder',
+    'minecraft:pink_concrete_powder',
+    'minecraft:gray_concrete_powder',
+    'minecraft:light_gray_concrete_powder',
+    'minecraft:cyan_concrete_powder',
+    'minecraft:purple_concrete_powder',
+    'minecraft:blue_concrete_powder',
+    'minecraft:brown_concrete_powder',
+    'minecraft:green_concrete_powder',
+    'minecraft:red_concrete_powder',
+    'minecraft:black_concrete_powder',
+    'minecraft:soul_soil',
+    'minecraft:rooted_dirt'
+)
 # TODO: STONES
-# TODO: ORES
+ORES = (
+    'minecraft:gold_ore',
+    'minecraft:deepslate_gold_ore',
+    'minecraft:iron_ore',
+    'minecraft:deepslate_iron_ore',
+    'minecraft:coal_ore',
+    'minecraft:deepslate_coal_ore',
+    'minecraft:nether_gold_ore',
+    'minecraft:lapis_ore',
+    'minecraft:deepslate_lapis_ore',
+    'minecraft:diamond_ore',
+    'minecraft:deepslate_diamond_ore',
+    'minecraft:redstone_ore',
+    'minecraft:deepslate_redstone_ore',
+    'minecraft:emerald_ore',
+    'minecraft:deepslate_emerald_ore',
+    'minecraft:nether_quartz_ore',
+    'minecraft:copper_ore',
+    'minecraft:deepslate_copper_ore'
+)
 
 
 # construction
