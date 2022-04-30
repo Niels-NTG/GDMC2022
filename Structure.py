@@ -1,5 +1,4 @@
 import copy
-
 import numpy as np
 from StructurePrototype import StructurePrototype
 import interface
@@ -10,6 +9,7 @@ import mapTools
 
 
 class Structure:
+
     ROTATE_NORTH = 0
     ROTATE_EAST = 1
     ROTATE_SOUTH = 2
@@ -26,7 +26,7 @@ class Structure:
                  ):
         self.prototype = structurePrototype
 
-        self.file = structurePrototype.nbt
+        self.nbt = structurePrototype.nbt
 
         self.x = x
         self.y = y
@@ -59,20 +59,20 @@ class Structure:
 
     def setSize(self, x=None, y=None, z=None):
         if x is not None:
-            self.file["size"][0].value = x
+            self.nbt["size"][0].value = x
         if y is not None:
-            self.file["size"][1].value = y
+            self.nbt["size"][1].value = y
         if z is not None:
-            self.file["size"][2].value = z
+            self.nbt["size"][2].value = z
 
     def getSizeX(self):
-        return self.file["size"][0].value
+        return self.nbt["size"][0].value
 
     def getSizeY(self):
-        return self.file["size"][1].value
+        return self.nbt["size"][1].value
 
     def getSizeZ(self):
-        return self.file["size"][2].value
+        return self.nbt["size"][2].value
 
     def getBox(self):
         return [
@@ -153,7 +153,7 @@ class Structure:
             )
 
     def _getBlockMaterial(self, block):
-        blockMaterial = self.file["palette"][block["state"].value]['Name'].value
+        blockMaterial = self.nbt["palette"][block["state"].value]['Name'].value
         replacementMaterial = self.materialReplacements.get(blockMaterial)
         if replacementMaterial is None:
             return blockMaterial
@@ -163,9 +163,9 @@ class Structure:
     # This may contain information on the orientation of a block or open or closed stated of a door.
     def _getBlockProperties(self, block):
         properties = dict()
-        if "Properties" in self.file["palette"][block["state"].value].keys():
-            for key in self.file["palette"][block["state"].value]["Properties"].keys():
-                properties[key] = self.file["palette"][block["state"].value]["Properties"][key].value
+        if "Properties" in self.nbt["palette"][block["state"].value].keys():
+            for key in self.nbt["palette"][block["state"].value]["Properties"].keys():
+                properties[key] = self.nbt["palette"][block["state"].value]["Properties"][key].value
 
                 # Apply rotation to block property if needed.
                 if key == "facing" and self.rotation != self.ROTATE_NORTH:
@@ -194,14 +194,14 @@ class Structure:
 
     def getMaterialList(self):
         materials = []
-        for block in self.file["blocks"]:
+        for block in self.nbt["blocks"]:
             blockMaterial = self._getBlockMaterial(block)
             if blockMaterial not in materials:
                 materials.append(blockMaterial)
         return materials
 
     def place(self, includeAir=False):
-        for block in self.file["blocks"]:
+        for block in self.nbt["blocks"]:
             blockMaterial = self._getBlockMaterial(block)
 
             if blockMaterial == 'minecraft:structure_void':

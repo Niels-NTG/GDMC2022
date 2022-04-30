@@ -1,5 +1,4 @@
 import re
-
 from nbt import nbt
 import os
 import json
@@ -54,3 +53,12 @@ class StructurePrototype:
                                             StructurePrototype(
                                                 structureFilePath=decorationStructureFilePath
                                             )
+
+    def getSizeX(self):
+        return self.nbt["size"][0].value
+
+    def getSizeY(self):
+        return self.nbt["size"][1].value
+
+    def getSizeZ(self):
+        return self.nbt["size"][2].value
