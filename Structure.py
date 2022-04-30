@@ -38,6 +38,7 @@ class Structure:
 
         self.customProperties = copy.deepcopy(structurePrototype.customProperties)
         self._applyCustomProperties()
+        self.groundClearance = structurePrototype.groundClearance
 
         self.materialReplacements = dict()
 
@@ -216,6 +217,7 @@ class Structure:
             mapTools.setBlock(blockPosition[0], blockPosition[1], blockPosition[2], blockMaterial, blockProperties)
 
         interface.sendBlocks()
+        print('placed structure %s at %s %s %s' % (self.prototype.structureName, self.x, self.y, self.z))
 
         if self.debug:
             mapTools.fill(

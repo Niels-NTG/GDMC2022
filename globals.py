@@ -21,7 +21,8 @@ def loadStructures():
         structureFilePath = mainStructureFolder + '/' + structureFileName
 
         structurePrototypes[structureFileName] = StructurePrototype(
-            structureFilePath=structureFilePath
+            structureFilePath=structureFilePath,
+            structureName=structureFileName
         )
 
 
@@ -434,7 +435,10 @@ PLANTS = ('minecraft:dead_bush',) + FLOWERS + CROPS + FUNGI + WILDCROPS \
     + TALLCROPS + GRASSES + VINES
 
 # landscape
-# TODO: LIQUIDS
+LIQUIDS = (
+    'minecraft:water', 'minecraft:flowing_water',
+    'minecraft:lava', 'minecraft:flowing_lava'
+)
 # TODO: SOILS
 # TODO: STONES
 # TODO: ORES

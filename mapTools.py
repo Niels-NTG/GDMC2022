@@ -22,29 +22,31 @@ def getBuildArea(area=(0, 0, 128, 128)):
     return area
 
 
-# TODO find out how to make the same function that counts ocean floor as well.
-def calcGoodHeightmap(buildArea):
+def calcHeightMap(buildArea):
     worldSlice = WorldSlice(rect=buildArea)
 
-    hm_mbnl = worldSlice.heightmaps["MOTION_BLOCKING_NO_LEAVES"]
-    heightmapNoTrees = hm_mbnl[:]
+    heightMapMotionBlocking = worldSlice.heightmaps['MOTION_BLOCKING']
+    heightMapNoTrees = heightMapMotionBlocking[:]
     area = worldSlice.rect
 
     for x in range(area[2]):
         for z in range(area[3]):
             while True:
-                y = heightmapNoTrees[x, z]
+                y = heightMapNoTrees[x, z]
                 block = worldSlice.getBlockAt(
                     x=area[0] + x,
                     y=y - 1,
                     z=area[1] + z
                 )
                 if block[-4:] == '_log':
-                    heightmapNoTrees[x, z] -= 1
+                    heightMapNoTrees[x, z] -= 1
                 else:
                     break
+    heightMapNoTrees = np.array(np.minimum(heightMapMotionBlocking, heightMapNoTrees))
 
-    return np.array(np.minimum(hm_mbnl, heightmapNoTrees))
+    heightMapOceanFloor = worldSlice.heightmaps['OCEAN_FLOOR'][:]
+
+    return heightMapNoTrees, heightMapOceanFloor
 
 
 def getMostFrequentHeight(heightMap):
@@ -105,83 +107,6 @@ def placePerimeter(fromX, fromY, fromZ, toX, toY, toZ, material, fillMode="repla
     fill(fromX, fromY, fromZ, toX, toY, fromZ, material, fillMode)
     fill(toX, fromY, fromZ, toX, toY, toZ, material, fillMode)
     fill(fromX, fromY, toZ, toX, toY, toZ, material, fillMode)
-
-
-def placeLine(fromX, fromY, fromZ, toX, toY, toZ, material):
-    dimension, flatSides = getDimension(fromX, fromY, fromZ, toX, toY, toZ)
-    if dimension == 0:
-        interface.setBlock(fromX, fromY, fromZ, material, None)
-    elif dimension == 1:
-        fill(fromX, fromY, fromZ, toX, toY, toZ, material)
-    elif dimension == 2:
-        points = line3d(fromX, fromY, fromZ, toX, toY, toZ)
-        for point in points:
-            interface.setBlock(point[0], point[1], point[2], material, None)
-
-
-def line3d(fromX, fromY, fromZ, toX, toY, toZ):
-    def ifGreaterPosElseNegative(a, b):
-        return 1 if a > b else -1
-
-    def bresenHamLineNextPoint(x, y, z, xs, ys, zs, dx, dy, dz, p1, p2):
-        x += xs
-        if p1 >= 0:
-            y += ys
-            p1 -= 2 * dx
-        if p2 >= 0:
-            z += zs
-            p2 -= 2 * dx
-        p1 += 2 * dy
-        p2 += 2 * dz
-        return x, y, z, p1, p2
-
-    points = set()
-    points.add((fromX, fromY, fromZ))
-    dx = abs(toX - fromX)
-    dy = abs(toY - fromY)
-    dz = abs(toZ - fromZ)
-    xs = ifGreaterPosElseNegative(toX, fromX)
-    ys = ifGreaterPosElseNegative(toY, fromY)
-    zs = ifGreaterPosElseNegative(toZ, fromZ)
-
-    # Driving axis is X-axis"
-    if dx >= dy and dx >= dz:
-        p1 = 2 * dy - dx
-        p2 = 2 * dz - dx
-        while fromX != toX:
-            fromX, fromY, fromZ, p1, p2 = bresenHamLineNextPoint(
-                fromX, fromY, fromZ,
-                xs, ys, zs,
-                dx, dy, dz,
-                p1, p2
-            )
-            points.add((fromX, fromY, fromZ))
-
-    # Driving axis is Y-axis"
-    elif dy >= dx and dy >= dz:
-        p1 = 2 * dx - dy
-        p2 = 2 * dz - dy
-        while fromY != toY:
-            fromY, fromX, fromZ, p1, p2 = bresenHamLineNextPoint(
-                fromY, fromX, fromZ,
-                ys, xs, zs,
-                dy, dx, dz,
-                p1, p2
-            )
-            points.add((fromX, fromY, fromZ))
-
-    # Driving axis is Z-axis"
-    else:
-        p1 = 2 * dy - dz
-        p2 = 2 * dx - dz
-        while fromZ != toZ:
-            fromZ, fromX, fromY, p1, p2 = bresenHamLineNextPoint(fromZ, fromX, fromY,
-                                                                 zs, xs, ys,
-                                                                 dz, dx, dy,
-                                                                 p1, p2)
-            points.add((fromX, fromY, fromZ))
-
-    return points
 
 
 def getDimension(fromX, fromY, fromZ, toX, toY, toZ):

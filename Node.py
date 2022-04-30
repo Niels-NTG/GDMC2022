@@ -8,13 +8,10 @@ from StructurePrototype import StructurePrototype
 
 class Node:
 
-    connectors = []
-
     def __init__(self,
                  x: int = 0, y: int = 0, z: int = 0,
                  parentStructure: Structure = None,
                  buildArea=(0, 0, 0, 0),
-                 heightMap=np.array([]),
                  mapOfStructures=np.array([]),
                  facing: int = None,
                  nodeStructurePrototype: StructurePrototype = None,
@@ -23,7 +20,6 @@ class Node:
 
         self.rng = rng
         self.buildArea = buildArea
-        self.heightMap = heightMap
         self.mapOfStructures = mapOfStructures
 
         # Create structure instance.
@@ -40,14 +36,22 @@ class Node:
             )
 
         # Create cropped heightmap for the ground underneath the structure.
-        self.localHeightMap = mapTools.getCroppedGrid(
-            grid=heightMap,
+        baseLineHeightMap, oceanFloorHeightMap = mapTools.calcHeightMap(buildArea)
+        self.localHeightMapBaseLine = mapTools.getCroppedGrid(
+            grid=baseLineHeightMap,
+            globalOrigin=buildArea[:2],
+            globalCropOrigin=self.structure.getOriginInWorldSpace(),
+            globalCropFarCorner=self.structure.getFarCornerInWorldSpace()
+        )
+        self.localHeightMapOceanFloor = mapTools.getCroppedGrid(
+            grid=oceanFloorHeightMap,
             globalOrigin=buildArea[:2],
             globalCropOrigin=self.structure.getOriginInWorldSpace(),
             globalCropFarCorner=self.structure.getFarCornerInWorldSpace()
         )
 
         # Bind connectors list from structure's custom properties.
+        self.connectors = []
         if 'connectors' in self.structure.customProperties:
             if isinstance(self.structure.customProperties['connectors'], list):
                 self.connectors = self.structure.customProperties['connectors']
@@ -65,9 +69,15 @@ class Node:
 
     # Evaluate if the current structure is placable.
     def isPlacable(self):
-        if self.localHeightMap.shape != (self.structure.getSizeX(), self.structure.getSizeZ()):
+        if self.localHeightMapBaseLine.shape != (self.structure.getSizeX(), self.structure.getSizeZ()):
             return False
 
+        # Prevent structure from burying itself underground
+        if self.localHeightMapBaseLine.max() + self.structure.groundClearance > self.structure.y:
+            return False
+
+        # TODO replace with smart function that rescans the build area
+        # Check if space is not already occupied by another structure
         structureMapCropped = mapTools.getCroppedGrid(
             grid=self.mapOfStructures,
             globalOrigin=self.buildArea[:2],
@@ -113,12 +123,12 @@ class Node:
                 ],
                 self.structure.rotation
             )
-            groundLevel = self.localHeightMap[
+            groundLevel = self.localHeightMapOceanFloor[
                 pillarPosition[0],
                 pillarPosition[2]
             ]
             pillarPosition = np.add(pillarPosition, [self.structure.x, 0, self.structure.z])
-            mapTools.keepFill(
+            mapTools.fill(
                 *pillarPosition,
                 pillarPosition[0], groundLevel, pillarPosition[2],
                 pillar.get('material')
@@ -204,7 +214,6 @@ class Node:
                     y=nextHeight,
                     parentStructure=self.structure,
                     buildArea=self.buildArea,
-                    heightMap=self.heightMap,
                     mapOfStructures=self.mapOfStructures,
                     rng=self.rng
                 )

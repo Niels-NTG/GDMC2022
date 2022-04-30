@@ -11,8 +11,11 @@ import json
 class StructurePrototype:
 
     def __init__(self,
-                 structureFilePath: str
+                 structureFilePath: str,
+                 structureName: str
                  ):
+        self.structureName = structureName
+
         self.nbt = nbt.NBTFile(structureFilePath + ".nbt", "rb")
 
         # Structure which gets inserted as a transition from this structure to the next.
@@ -20,6 +23,8 @@ class StructurePrototype:
 
         # Structures which get applied as decorations for this structure.
         self.decorationStructures = {}
+
+        self.groundClearance = 0
 
         self.customProperties = {}
         if os.path.isfile(structureFilePath + '.json'):
@@ -35,7 +40,8 @@ class StructurePrototype:
                             transitionStructureFilePath = rootDir + connectorProps['transitionStructure']
                             if connectorProps['transitionStructure'] not in self.transitionStructures:
                                 self.transitionStructures[connectorProps['transitionStructure']] = StructurePrototype(
-                                    structureFilePath=transitionStructureFilePath
+                                    structureFilePath=transitionStructureFilePath,
+                                    structureName=connectorProps['transitionStructure']
                                 )
 
                 if 'postProcessing' in self.customProperties:
@@ -51,8 +57,11 @@ class StructurePrototype:
                                         decorationStructureFilePath = rootDir + decoration['decorationStructure']
                                         self.decorationStructures[decoration['decorationStructure']] = \
                                             StructurePrototype(
-                                                structureFilePath=decorationStructureFilePath
+                                                structureFilePath=decorationStructureFilePath,
+                                                structureName=decoration['decorationStructure']
                                             )
+                if 'groundClearance' in self.customProperties:
+                    self.groundClearance = self.customProperties['groundClearance']
 
     def getSizeX(self):
         return self.nbt["size"][0].value

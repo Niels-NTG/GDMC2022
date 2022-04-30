@@ -21,32 +21,36 @@ class SettlementBuilder:
         buildArea = mapTools.getBuildArea()
 
         # DEBUG
-        mapTools.fill(
-            buildArea[0],
-            69,
-            buildArea[1],
-            buildArea[0] + buildArea[2],
-            69 + 10,
-            buildArea[1] + buildArea[3],
-            "minecraft:air"
-        )
-
-        # DEBUG
-        mapTools.placePerimeter(
-            buildArea[0],
-            68,
-            buildArea[1],
-            buildArea[0] + buildArea[2],
-            68,
-            buildArea[1] + buildArea[3],
-            'minecraft:orange_wool'
-        )
+        # mapTools.fill(
+        #     buildArea[0],
+        #     69,
+        #     buildArea[1],
+        #     buildArea[0] + buildArea[2],
+        #     69 + 10,
+        #     buildArea[1] + buildArea[3],
+        #     "minecraft:air"
+        # )
+        #
+        # # DEBUG
+        # mapTools.placePerimeter(
+        #     buildArea[0],
+        #     68,
+        #     buildArea[1],
+        #     buildArea[0] + buildArea[2],
+        #     68,
+        #     buildArea[1] + buildArea[3],
+        #     'minecraft:orange_wool'
+        # )
 
         # Height map of the build area.
-        heightMap = mapTools.calcGoodHeightmap(buildArea)
+        baseLineHeightMap, oceanFloorHeightMap = mapTools.calcHeightMap(buildArea)
+
+        # TODO recalculate heightmap for each structure instance
+        # TODO generate heightmap of ground surface (excluding water) for pillars and ground props
+        # TODO generate heightmap for baseline height of buildings
 
         # Map of structures built in the build area.
-        mapOfStructures = np.full(shape=heightMap.shape, fill_value=0)
+        mapOfStructures = np.full(shape=baseLineHeightMap.shape, fill_value=0)
 
         startingStructure: StructurePrototype = globals.structurePrototypes['ladder']
 
@@ -59,7 +63,7 @@ class SettlementBuilder:
 
         startingPos = (
             startingPos[0] + buildArea[0] + int(startingStructure.getSizeX() / 2),
-            heightMap[startingPos[0], startingPos[2]] + 2,
+            baseLineHeightMap[startingPos[0], startingPos[2]] + startingStructure.groundClearance,
             startingPos[2] + buildArea[1] + int(startingStructure.getSizeZ() / 2)
         )
 
@@ -68,7 +72,6 @@ class SettlementBuilder:
             y=startingPos[1],
             z=startingPos[2],
             buildArea=buildArea,
-            heightMap=heightMap,
             mapOfStructures=mapOfStructures,
             nodeStructurePrototype=startingStructure,
             rng=rng
