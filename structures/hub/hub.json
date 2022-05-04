@@ -7,8 +7,7 @@
         "walkway",
         "observation",
         "stairs_up",
-        "stairs_down",
-        null
+        "stairs_down"
       ]
     },
     {
@@ -18,8 +17,7 @@
         "walkway",
         "observation",
         "stairs_up",
-        "stairs_down",
-        null
+        "stairs_down"
       ]
     },
     {
@@ -29,8 +27,7 @@
         "walkway",
         "observation",
         "stairs_up",
-        "stairs_down",
-        null
+        "stairs_down"
       ]
     },
     {
@@ -40,8 +37,7 @@
         "walkway",
         "observation",
         "stairs_up",
-        "stairs_down",
-        null
+        "stairs_down"
       ]
     }
   ],

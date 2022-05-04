@@ -56,17 +56,6 @@ class Node:
             if isinstance(self.structure.customProperties['connectors'], list):
                 self.connectors = self.structure.customProperties['connectors']
 
-        # Pick a next node for each connector
-        for connection in self.connectors:
-            # If current node has a defined facing direciton and it's the opposite of the connection's direction:
-
-            if facing is not None and (connection.get('facing') + facing + 2) % 4 == facing:
-                connection['isPreviousDirection'] = True
-                connection['nextStructure'] = None
-            else:
-                # TODO pick nextStructure based on weighted value based on some evaluation function.
-                connection['nextStructure'] = self.rng.choice(connection.get('nextStructure'))
-
     # Evaluate if the current structure is placable.
     def isPlacable(self):
         if self.localHeightMapBaseLine.shape != (self.structure.getSizeX(), self.structure.getSizeZ()):
@@ -187,7 +176,7 @@ class Node:
             z=self.structure.z
         ).place(includeAir=True)
 
-    def place(self):
+    def place(self, isStartingNode=False):
         if not self.isPlacable():
             return
 
@@ -196,8 +185,21 @@ class Node:
 
         self._doPostProcessing()
 
+        selfRotation = self.structure.rotation
         for connection in self.connectors:
-            facing = (connection.get('facing') + self.structure.rotation) % 4
+
+            isPreviousDirection = False
+            nextStructure = None
+
+            if isStartingNode is False and (connection.get('facing') + selfRotation + 2) % 4 == selfRotation:
+                isPreviousDirection = True
+            elif isinstance(connection.get('nextStructure'), list):
+                nextStructureName = self.rng.choice(connection.get('nextStructure'))
+                if nextStructureName in globals.structurePrototypes:
+                    nextStructure = globals.structurePrototypes[nextStructureName]
+                    # TODO pick next structure for this connection using .isPlacable heuristic
+
+            connectionRotation = (connection.get('facing') + selfRotation) % 4
 
             # Determine height of next node.
             nextHeight = self.structure.y
@@ -205,12 +207,11 @@ class Node:
                 nextHeight = self.structure.y + connection.get('height')
 
             nextNode = None
-
-            if connection.get('nextStructure'):
+            if nextStructure:
                 # Init and place next node
                 nextNode = Node(
-                    nodeStructurePrototype=globals.structurePrototypes[connection.get('nextStructure')],
-                    facing=facing,
+                    nodeStructurePrototype=nextStructure,
+                    facing=connectionRotation,
                     y=nextHeight,
                     parentStructure=self.structure,
                     buildArea=self.buildArea,
@@ -222,8 +223,8 @@ class Node:
             if connection.get('transitionStructure'):
                 # Only when it transitioning in the previous direction
                 # OR to transition to the next node, as long this is placable.
-                if connection.get('isPreviousDirection') or (connection.get('nextStructure') and nextNode.isPlacable()):
-                    self._placeTransitionStructure(connection.get('transitionStructure'), facing)
+                if isPreviousDirection or (nextNode and nextNode.isPlacable()):
+                    self._placeTransitionStructure(connection.get('transitionStructure'), connectionRotation)
 
             if nextNode:
                 nextNode.place()

@@ -6,8 +6,7 @@
       "transitionStructure": "ladder_door",
       "nextStructure": [
         "walkway",
-        "observation",
-        null
+        "observation"
       ]
     },
     {
@@ -15,8 +14,7 @@
       "transitionStructure": "ladder_door",
       "nextStructure": [
         "walkway",
-        "observation",
-        null
+        "observation"
       ]
     }
   ],

@@ -9,14 +9,12 @@ class SettlementBuilder:
 
     def __init__(self):
 
-        print(globals.structurePrototypes)
-
         # DEBUG
         # central RNG generator
-        rng = np.random.default_rng()
+        self.rng = np.random.default_rng()
 
         # /setbuildarea ~ ~ ~ ~32 ~12 ~32
-        buildArea = mapTools.getBuildArea()
+        self.buildArea = mapTools.getBuildArea()
 
         # DEBUG
         # mapTools.fill(
@@ -41,35 +39,52 @@ class SettlementBuilder:
         # )
 
         # Height map of the build area.
-        baseLineHeightMap, oceanFloorHeightMap = mapTools.calcHeightMap(buildArea)
+        self.baseLineHeightMap, self.oceanFloorHeightMap = mapTools.calcHeightMap(self.buildArea)
 
         # Map of structures built in the build area.
-        mapOfStructures = np.full(shape=baseLineHeightMap.shape, fill_value=0)
+        mapOfStructures = np.full(shape=self.baseLineHeightMap.shape, fill_value=0)
 
         startingStructure: StructurePrototype = globals.structurePrototypes['ladder']
 
+        maxPlacementAttempts = 40
+        placementTryCount = 0
+        while placementTryCount < maxPlacementAttempts:
+
+            startingPos = self.getStartPosition(startingStructure)
+
+            startingNode = Node(
+                x=startingPos[0],
+                y=startingPos[1],
+                z=startingPos[2],
+                facing=self.rng.integers(4),
+                buildArea=self.buildArea,
+                mapOfStructures=mapOfStructures,
+                nodeStructurePrototype=startingStructure,
+                rng=self.rng
+            )
+            print(
+                'Trying placing starting structure %s at %s (%s)' % (
+                    startingStructure.structureName, startingPos, placementTryCount + 1
+                )
+            )
+            if startingNode.isPlacable():
+                startingNode.place(isStartingNode=True)
+                break
+            else:
+                placementTryCount = placementTryCount + 1
+
+    def getStartPosition(self, startingStructure):
         # Pick starting position somewhere in the middle of the build area
         structureSize = startingStructure.getLongestHorizontalSize()
-        startingPos = (
-            rng.integers(low=structureSize, high=buildArea[2] - structureSize),
+        pos = (
+            self.rng.integers(low=structureSize, high=self.buildArea[2] - structureSize),
             0,
-            rng.integers(low=structureSize, high=buildArea[3] - structureSize)
+            self.rng.integers(low=structureSize, high=self.buildArea[3] - structureSize)
         )
-        print(startingPos)
+        pos = (
+            pos[0] + self.buildArea[0] + int(startingStructure.getSizeX() / 2),
+            self.baseLineHeightMap[pos[0], pos[2]] + startingStructure.groundClearance,
+            pos[2] + self.buildArea[1] + int(startingStructure.getSizeZ() / 2)
+        )
+        return pos
 
-        startingPos = (
-            startingPos[0] + buildArea[0] + int(startingStructure.getSizeX() / 2),
-            baseLineHeightMap[startingPos[0], startingPos[2]] + startingStructure.groundClearance,
-            startingPos[2] + buildArea[1] + int(startingStructure.getSizeZ() / 2)
-        )
-
-        startingNode = Node(
-            x=startingPos[0],
-            y=startingPos[1],
-            z=startingPos[2],
-            buildArea=buildArea,
-            mapOfStructures=mapOfStructures,
-            nodeStructurePrototype=startingStructure,
-            rng=rng
-        )
-        startingNode.place()
