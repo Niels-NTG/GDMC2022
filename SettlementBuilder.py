@@ -11,8 +11,6 @@ class SettlementBuilder:
 
         print(globals.structurePrototypes)
 
-        # TODO modify mapOfStructures to deal with "loops" (waveform collapse?)
-
         # DEBUG
         # central RNG generator
         rng = np.random.default_rng()
@@ -45,21 +43,19 @@ class SettlementBuilder:
         # Height map of the build area.
         baseLineHeightMap, oceanFloorHeightMap = mapTools.calcHeightMap(buildArea)
 
-        # TODO recalculate heightmap for each structure instance
-        # TODO generate heightmap of ground surface (excluding water) for pillars and ground props
-        # TODO generate heightmap for baseline height of buildings
-
         # Map of structures built in the build area.
         mapOfStructures = np.full(shape=baseLineHeightMap.shape, fill_value=0)
 
         startingStructure: StructurePrototype = globals.structurePrototypes['ladder']
 
         # Pick starting position somewhere in the middle of the build area
+        structureSize = startingStructure.getLongestHorizontalSize()
         startingPos = (
-            int(rng.normal(loc=buildArea[2] / 2, scale=buildArea[2] / 6)),
+            rng.integers(low=structureSize, high=buildArea[2] - structureSize),
             0,
-            int(rng.normal(loc=buildArea[3] / 2, scale=buildArea[3] / 6)),
+            rng.integers(low=structureSize, high=buildArea[3] - structureSize)
         )
+        print(startingPos)
 
         startingPos = (
             startingPos[0] + buildArea[0] + int(startingStructure.getSizeX() / 2),

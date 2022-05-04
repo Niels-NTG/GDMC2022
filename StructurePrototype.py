@@ -1,4 +1,5 @@
 import re
+import numpy as np
 from nbt import nbt
 import os
 import json
@@ -71,3 +72,27 @@ class StructurePrototype:
 
     def getSizeZ(self):
         return self.nbt["size"][2].value
+
+    def getShortestDimension(self):
+        return np.argmin([np.abs(self.getSizeX()), np.abs(self.getSizeY()), np.abs(self.getSizeZ())])
+
+    def getLongestDimension(self):
+        return np.argmax([np.abs(self.getSizeX()), np.abs(self.getSizeY()), np.abs(self.getSizeZ())])
+
+    def getShortestHorizontalDimension(self):
+        return np.argmin([np.abs(self.getSizeX()), np.abs(self.getSizeZ())]) * 2
+
+    def getLongestHorizontalDimension(self):
+        return np.argmax([np.abs(self.getSizeX()), np.abs(self.getSizeZ())]) * 2
+
+    def getShortestSize(self):
+        return [self.getSizeX(), self.getSizeY(), self.getSizeZ()][self.getShortestDimension()]
+
+    def getLongestSize(self):
+        return [self.getSizeX(), self.getSizeY(), self.getSizeZ()][self.getLongestDimension()]
+
+    def getShortestHorizontalSize(self):
+        return [self.getSizeX(), 0, self.getSizeZ()][self.getShortestHorizontalDimension()]
+
+    def getLongestHorizontalSize(self):
+        return [self.getSizeX(), 0, self.getSizeZ()][self.getLongestHorizontalDimension()]

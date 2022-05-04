@@ -17,7 +17,6 @@ def getBuildArea(area=(0, 0, 128, 128)):
         z2 = serverBuildArea["zTo"]
         area = (x1, z1, x2 - x1, z2 - z1)
 
-    # TODO maybe create a global list of chunks here?
     print("working in area xz s%s" % (str(area)))
     return area
 
