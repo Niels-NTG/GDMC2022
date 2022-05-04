@@ -1,5 +1,5 @@
 import numpy as np
-
+import copy
 import globals
 import mapTools
 from Structure import Structure
@@ -188,42 +188,49 @@ class Node:
         selfRotation = self.structure.rotation
         for connection in self.connectors:
 
+            connectionRotation = (connection.get('facing') + selfRotation) % 4
+
             isPreviousDirection = False
-            nextStructure = None
+            nextNode = None
 
             if isStartingNode is False and (connection.get('facing') + selfRotation + 2) % 4 == selfRotation:
                 isPreviousDirection = True
             elif isinstance(connection.get('nextStructure'), list):
-                nextStructureName = self.rng.choice(connection.get('nextStructure'))
-                if nextStructureName in globals.structurePrototypes:
+
+                nextStructureNameList = copy.copy(connection.get('nextStructure'))
+                self.rng.shuffle(nextStructureNameList)
+
+                for nextStructureName in nextStructureNameList:
+                    if nextStructureName not in globals.structurePrototypes:
+                        continue
+
                     nextStructure = globals.structurePrototypes[nextStructureName]
-                    # TODO pick next structure for this connection using .isPlacable heuristic
 
-            connectionRotation = (connection.get('facing') + selfRotation) % 4
+                    # Determine height of next node.
+                    nextHeight = self.structure.y
+                    if connection.get('height'):
+                        nextHeight = self.structure.y + connection.get('height')
 
-            # Determine height of next node.
-            nextHeight = self.structure.y
-            if connection.get('height'):
-                nextHeight = self.structure.y + connection.get('height')
+                    # Init and place next node
+                    nextNode = Node(
+                        nodeStructurePrototype=nextStructure,
+                        facing=connectionRotation,
+                        y=nextHeight,
+                        parentStructure=self.structure,
+                        buildArea=self.buildArea,
+                        mapOfStructures=self.mapOfStructures,
+                        rng=self.rng
+                    )
 
-            nextNode = None
-            if nextStructure:
-                # Init and place next node
-                nextNode = Node(
-                    nodeStructurePrototype=nextStructure,
-                    facing=connectionRotation,
-                    y=nextHeight,
-                    parentStructure=self.structure,
-                    buildArea=self.buildArea,
-                    mapOfStructures=self.mapOfStructures,
-                    rng=self.rng
-                )
+                    if nextNode.isPlacable():
+                        break
+                    nextNode = None
 
             # Build transition piece
             if connection.get('transitionStructure'):
                 # Only when it transitioning in the previous direction
                 # OR to transition to the next node, as long this is placable.
-                if isPreviousDirection or (nextNode and nextNode.isPlacable()):
+                if isPreviousDirection or nextNode:
                     self._placeTransitionStructure(connection.get('transitionStructure'), connectionRotation)
 
             if nextNode:
