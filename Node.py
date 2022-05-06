@@ -65,7 +65,6 @@ class Node:
         if self.localHeightMapBaseLine.max() + self.structure.groundClearance > self.structure.y:
             return False
 
-        # TODO replace with smart function that rescans the build area
         # Check if space is not already occupied by another structure
         structureMapCropped = mapTools.getCroppedGrid(
             grid=self.mapOfStructures,
@@ -171,7 +170,7 @@ class Node:
             x=self.structure.x + decorationOrigin[0],
             y=self.structure.y + decorationOrigin[1],
             z=self.structure.z + decorationOrigin[2]
-        ).place(includeAir=True)
+        ).place()
 
     # Place transition structure.
     # This is a structure inserted inside of the node's structure to create a transition (eg. a doorway) to the next
@@ -184,7 +183,7 @@ class Node:
             x=self.structure.x,
             y=self.structure.y,
             z=self.structure.z
-        ).place(includeAir=True)
+        ).place()
 
     def place(self, isStartingNode=False):
         if not self.isPlacable():

@@ -25,7 +25,8 @@ class StructurePrototype:
         # Structures which get applied as decorations for this structure.
         self.decorationStructures = {}
 
-        self.groundClearance = 0
+        # By default a structure should be build 1 block above the base line height map
+        self.groundClearance = 1
 
         self.customProperties = {}
         if os.path.isfile(structureFilePath + '.json'):

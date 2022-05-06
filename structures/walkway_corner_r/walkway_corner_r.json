@@ -8,7 +8,8 @@
         "walkway",
         "observation",
         "ladder",
-        "stairs_up"
+        "stairs_up",
+        "walkway_corner_l"
       ]
     },
     {
@@ -19,7 +20,8 @@
         "walkway",
         "observation",
         "ladder",
-        "stairs_up"
+        "stairs_up",
+        "walkway_corner_l"
       ]
     }
   ],

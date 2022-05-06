@@ -201,14 +201,13 @@ class Structure:
                 materials.append(blockMaterial)
         return materials
 
-    def place(self, includeAir=False):
+    def place(self, includeAir=True):
         for block in self.nbt["blocks"]:
             blockMaterial = self._getBlockMaterial(block)
 
             if blockMaterial == 'minecraft:structure_void':
                 continue
 
-            # TODO find fix for trees going inside structures
             # Skip empty parts of the structure unless includeAir is True.
             if includeAir is False and blockMaterial == "minecraft:air":
                 continue
