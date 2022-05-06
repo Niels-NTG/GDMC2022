@@ -115,11 +115,13 @@ def destroy(fromX, fromY, fromZ, toX, toY, toZ):
     return fill(fromX, fromY, fromZ, toX, toY, toZ, "minecraft:air", fillMode="destroy")
 
 
-def placePerimeter(fromX, fromY, fromZ, toX, toY, toZ, material, fillMode="replace"):
-    fill(fromX, fromY, fromZ, fromX, toY, toZ, material, fillMode)
-    fill(fromX, fromY, fromZ, toX, toY, fromZ, material, fillMode)
-    fill(toX, fromY, fromZ, toX, toY, toZ, material, fillMode)
-    fill(fromX, fromY, toZ, toX, toY, toZ, material, fillMode)
+def placePerimeter(fromX, fromZ, sizeX, sizeZ, heightMap, material):
+    for x in range(0, sizeX):
+        setBlock(fromX + x, heightMap[x, 0], fromZ, material)
+        setBlock(fromX + x, heightMap[x, sizeZ], fromZ + sizeZ, material)
+    for z in range(0, sizeZ):
+        setBlock(fromX, heightMap[0, z], fromZ + z, material)
+        setBlock(fromX + sizeX, heightMap[sizeX, z], fromZ + z, material)
 
 
 def getDimension(fromX, fromY, fromZ, toX, toY, toZ):

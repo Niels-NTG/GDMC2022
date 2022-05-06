@@ -18,28 +18,27 @@ class SettlementBuilder:
 
         # DEBUG
         # mapTools.fill(
-        #     buildArea[0],
-        #     69,
-        #     buildArea[1],
-        #     buildArea[0] + buildArea[2],
-        #     69 + 10,
-        #     buildArea[1] + buildArea[3],
+        #     self.buildArea[0],
+        #     64,
+        #     self.buildArea[1],
+        #     self.buildArea[0] + self.buildArea[2],
+        #     64 + 10,
+        #     self.buildArea[1] + self.buildArea[3],
         #     "minecraft:air"
-        # )
-        #
-        # # DEBUG
-        # mapTools.placePerimeter(
-        #     buildArea[0],
-        #     68,
-        #     buildArea[1],
-        #     buildArea[0] + buildArea[2],
-        #     68,
-        #     buildArea[1] + buildArea[3],
-        #     'minecraft:orange_wool'
         # )
 
         # Height map of the build area.
         self.baseLineHeightMap, self.oceanFloorHeightMap = mapTools.calcHeightMap(self.buildArea)
+
+        # DEBUG
+        mapTools.placePerimeter(
+            self.buildArea[0],
+            self.buildArea[1],
+            self.buildArea[2],
+            self.buildArea[3],
+            self.oceanFloorHeightMap,
+            'minecraft:orange_wool'
+        )
 
         # Map of structures built in the build area.
         mapOfStructures = np.full(shape=self.baseLineHeightMap.shape, fill_value=0)

@@ -5,16 +5,14 @@
       "facing": 0,
       "transitionStructure": "ladder_door",
       "nextStructure": [
-        "walkway",
-        "observation"
+        "walkway"
       ]
     },
     {
       "facing": 2,
       "transitionStructure": "ladder_door",
       "nextStructure": [
-        "walkway",
-        "observation"
+        "walkway"
       ]
     }
   ],

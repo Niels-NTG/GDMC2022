@@ -39,7 +39,6 @@ def getChunks(x, z, dx, dz):
 
 def runCommand(command):
     """**Executes one or multiple minecraft commands (separated by newlines).**"""
-    print("running cmd " + command)
     url = 'http://localhost:9000/command'
     try:
         response = session.post(url, bytes(command, "utf-8"))
@@ -59,7 +58,6 @@ def getBlock(x, y, z):
     except ConnectionError:
         return "minecraft:void_air"
     return response.text
-    # print("{}, {}, {}: {} - {}".format(x, y, z, response.status_code, response.text))
 
 
 def setBlock(x, y, z, material, properties, isBatched=True):
@@ -74,7 +72,6 @@ def setBlock(x, y, z, material, properties, isBatched=True):
         return _placeBlockBatched(x, y, z, material, serialisedProperties)
     """**Places a block in the world.**"""
     url = f'http://localhost:9000/blocks?x={x}&y={y}&z={z}'
-    # print('setting block {} at {} {} {}'.format(str, x, y, z))
     try:
         response = session.put(url, material + serialisedProperties)
     except ConnectionError:

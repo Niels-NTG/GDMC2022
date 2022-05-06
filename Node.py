@@ -66,6 +66,7 @@ class Node:
             return False
 
         # Check if space is not already occupied by another structure
+        # TODO only allow node to be build if no other node is 1 tile in between.
         structureMapCropped = mapTools.getCroppedGrid(
             grid=self.mapOfStructures,
             globalOrigin=self.buildArea[:2],
@@ -186,8 +187,6 @@ class Node:
         ).place()
 
     def place(self, isStartingNode=False):
-        if not self.isPlacable():
-            return
 
         self.structure.place()
         self._updateMapOfStructures(self.structure)
@@ -231,10 +230,15 @@ class Node:
                         mapOfStructures=self.mapOfStructures,
                         rng=self.rng
                     )
-                    placementScores[nextStructureName] = nextNodeCandidates[nextStructureName].getPlacementScore()
+                    placementScore = nextNodeCandidates[nextStructureName].getPlacementScore()
+                    if placementScore > 0:
+                        placementScores[nextStructureName] = placementScore
 
             # Select next node based on which has the highest placement score.
-            nextNode = nextNodeCandidates.get(mapTools.getMaxDictValue(placementScores, self.rng))
+            # TODO replace with weighted choser
+            # TODO have placement looking 2 step into the future with MCTS
+            nextNodeStructureName = mapTools.getMaxDictValue(placementScores, self.rng)
+            nextNode = nextNodeCandidates.get(nextNodeStructureName)
 
             # Build transition piece
             if connection.get('transitionStructure'):
