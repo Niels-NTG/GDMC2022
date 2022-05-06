@@ -208,6 +208,7 @@ class Structure:
             if blockMaterial == 'minecraft:structure_void':
                 continue
 
+            # TODO find fix for trees going inside structures
             # Skip empty parts of the structure unless includeAir is True.
             if includeAir is False and blockMaterial == "minecraft:air":
                 continue

@@ -428,11 +428,32 @@ GRASSES = ('minecraft:grass', 'minecraft:tall_grass',
            'minecraft:fern', 'minecraft:large_fern')
 VINES = ('minecraft:vine',
          'minecraft:weeping_vines', 'minecraft:weeping_vines')
-
+LILYPADS = ('minecraft:lily_pad',)
+TREES = (
+    'minecraft:acacia_log',
+    'minecraft:birch_log',
+    'minecraft:brown_mushroom_block',
+    'minecraft:crimson_stem',
+    'minecraft:dark_oak_log',
+    'minecraft:jungle_log',
+    'minecraft:mushroom_stem',
+    'minecraft:oak_log',
+    'minecraft:red_mushroom_block',
+    'minecraft:spruce_log',
+    'minecraft:stripped_acacia_log',
+    'minecraft:stripped_birch_log',
+    'minecraft:stripped_crimson_stem',
+    'minecraft:stripped_dark_oak_log',
+    'minecraft:stripped_jungle_log',
+    'minecraft:stripped_oak_log',
+    'minecraft:stripped_spruce_log',
+    'minecraft:stripped_warped_stem',
+    'minecraft:warped_stem'
+) + LEAVES
 FLOWERS = SHORTFLOWERS + TALLFLOWERS
 TALLPLANTS = TALLCROPS + TALLFLOWERS
 PLANTS = ('minecraft:dead_bush',) + FLOWERS + CROPS + FUNGI + WILDCROPS \
-    + TALLCROPS + GRASSES + VINES
+    + TALLCROPS + GRASSES + VINES + LILYPADS
 
 # landscape
 LIQUIDS = (
@@ -494,7 +515,6 @@ ORES = (
     'minecraft:copper_ore',
     'minecraft:deepslate_copper_ore'
 )
-
 
 # construction
 STAIRS = ('minecraft:oak_stairs', 'minecraft:spruce_stairs',

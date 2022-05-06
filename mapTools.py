@@ -1,7 +1,7 @@
 import numpy as np
 import interface
 from worldLoader import WorldSlice
-from globals import AXES
+from globals import AXES, TREES, PLANTS, AIR
 
 
 def getBuildArea(area=(0, 0, 128, 128)):
@@ -23,11 +23,11 @@ def getBuildArea(area=(0, 0, 128, 128)):
 
 def calcHeightMap(buildArea):
     worldSlice = WorldSlice(rect=buildArea)
-
-    heightMapMotionBlocking = worldSlice.heightmaps['MOTION_BLOCKING']
-    heightMapNoTrees = heightMapMotionBlocking[:]
     area = worldSlice.rect
 
+    blockFilter = TREES + PLANTS + AIR
+
+    heightMapNoTrees = worldSlice.heightmaps['MOTION_BLOCKING'][:]
     for x in range(area[2]):
         for z in range(area[3]):
             while True:
@@ -37,13 +37,27 @@ def calcHeightMap(buildArea):
                     y=y - 1,
                     z=area[1] + z
                 )
-                if block[-4:] == '_log':
+                if block in blockFilter:
                     heightMapNoTrees[x, z] -= 1
                 else:
                     break
-    heightMapNoTrees = np.array(np.minimum(heightMapMotionBlocking, heightMapNoTrees))
+    heightMapNoTrees = np.array(np.minimum(worldSlice.heightmaps['MOTION_BLOCKING'], heightMapNoTrees))
 
     heightMapOceanFloor = worldSlice.heightmaps['OCEAN_FLOOR'][:]
+    for x in range(area[2]):
+        for z in range(area[3]):
+            while True:
+                y = heightMapOceanFloor[x, z]
+                block = worldSlice.getBlockAt(
+                    x=area[0] + x,
+                    y=y - 1,
+                    z=area[1] + z
+                )
+                if block in blockFilter:
+                    heightMapOceanFloor[x, z] -= 1
+                else:
+                    break
+    heightMapOceanFloor = np.array(np.minimum(worldSlice.heightmaps['OCEAN_FLOOR'], heightMapOceanFloor))
 
     return heightMapNoTrees, heightMapOceanFloor
 
@@ -160,3 +174,11 @@ def rotatePointAroundOrigin(origin, point, rotation):
         point[1],
         int(np.round(np.sin(angle) * (point[0] - origin[0]) + np.cos(angle) * (point[2] - origin[2]) + origin[2], 4))
     ]
+
+
+def getMaxDictValue(d, rng):
+    if d is None or len(d) == 0:
+        return None
+    firstMaxKey = max(d, key=lambda k: d[k])
+    maxValues = [key for key, value in d.items() if value == d[firstMaxKey]]
+    return rng.choice(maxValues)
