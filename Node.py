@@ -78,6 +78,16 @@ class Node:
 
         return True
 
+    def getPlacementScore(self):
+        if not self.isPlacable():
+            return 0
+
+        # Calculate height difference
+        elevationFromOceanFloor = self.structure.y - self.localHeightMapOceanFloor.mean()
+        normalizedOceanFloorHeight = 1 - np.clip((elevationFromOceanFloor ** 2) / 100, 0, 1)
+
+        return normalizedOceanFloorHeight
+
     # Set map of structures to a constant to indicate something is already been built here.
     def _updateMapOfStructures(self, structure: Structure):
         localOrigin, localFarCorner = mapTools.getCrop(
@@ -191,7 +201,8 @@ class Node:
             connectionRotation = (connection.get('facing') + selfRotation) % 4
 
             isPreviousDirection = False
-            nextNode = None
+            placementScores = dict()
+            nextNodeCandidates = dict()
 
             if isStartingNode is False and (connection.get('facing') + selfRotation + 2) % 4 == selfRotation:
                 isPreviousDirection = True
@@ -211,8 +222,8 @@ class Node:
                     if connection.get('height'):
                         nextHeight = self.structure.y + connection.get('height')
 
-                    # Init and place next node
-                    nextNode = Node(
+                    # Construct node and evaluate placement score
+                    nextNodeCandidates[nextStructureName] = Node(
                         nodeStructurePrototype=nextStructure,
                         facing=connectionRotation,
                         y=nextHeight,
@@ -221,10 +232,10 @@ class Node:
                         mapOfStructures=self.mapOfStructures,
                         rng=self.rng
                     )
+                    placementScores[nextStructureName] = nextNodeCandidates[nextStructureName].getPlacementScore()
 
-                    if nextNode.isPlacable():
-                        break
-                    nextNode = None
+            # Select next node based on which has the highest placement score.
+            nextNode = nextNodeCandidates.get(mapTools.getMaxDictValue(placementScores, self.rng))
 
             # Build transition piece
             if connection.get('transitionStructure'):
