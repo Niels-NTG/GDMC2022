@@ -178,9 +178,11 @@ def rotatePointAroundOrigin(origin, point, rotation):
     ]
 
 
-def getMaxDictValue(d, rng):
+def getMinValueDictKey(d, rng):
     if d is None or len(d) == 0:
         return None
-    firstMaxKey = max(d, key=lambda k: d[k])
-    maxValues = [key for key, value in d.items() if value == d[firstMaxKey]]
-    return rng.choice(maxValues)
+    # Get key with lowest value
+    firstMinKey = min(d, key=lambda k: d[k])
+    # Find all propertie with that same minimum value and choose a random one from among them.
+    minKeys = [key for key, value in d.items() if value == d[firstMinKey]]
+    return rng.choice(minKeys)

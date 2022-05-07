@@ -78,15 +78,15 @@ class Node:
 
         return True
 
-    def getPlacementScore(self):
+    def getPlacementCost(self):
         if not self.isPlacable():
-            return 0
+            return None
 
         # Calculate height difference
+        # TODO get actual building cost of building each pillar
         elevationFromOceanFloor = self.structure.y - self.localHeightMapOceanFloor.mean()
-        normalizedOceanFloorHeight = 1 - np.clip((elevationFromOceanFloor ** 2) / 100, 0, 1)
 
-        return normalizedOceanFloorHeight
+        return elevationFromOceanFloor
 
     # Set map of structures to a constant to indicate something is already been built here.
     def _updateMapOfStructures(self, structure: Structure):
@@ -230,14 +230,13 @@ class Node:
                         mapOfStructures=self.mapOfStructures,
                         rng=self.rng
                     )
-                    placementScore = nextNodeCandidates[nextStructureName].getPlacementScore()
-                    if placementScore > 0:
-                        placementScores[nextStructureName] = placementScore
+                    placementCost = nextNodeCandidates[nextStructureName].getPlacementCost()
+                    if placementCost is not None:
+                        placementScores[nextStructureName] = placementCost
 
             # Select next node based on which has the highest placement score.
-            # TODO replace with weighted choser
             # TODO have placement looking 2 step into the future with MCTS
-            nextNodeStructureName = mapTools.getMaxDictValue(placementScores, self.rng)
+            nextNodeStructureName = mapTools.getMinValueDictKey(placementScores, self.rng)
             nextNode = nextNodeCandidates.get(nextNodeStructureName)
 
             # Build transition piece
