@@ -15,7 +15,9 @@ class Node:
                  mapOfStructures=np.array([]),
                  facing: int = None,
                  nodeStructurePrototype: StructurePrototype = None,
-                 rng=np.random.default_rng()
+                 rng=np.random.default_rng(),
+                 baseLineHeightMap=np.array([]),
+                 oceanFloorHeightMap=np.array([])
                  ):
 
         self.rng = rng
@@ -36,7 +38,8 @@ class Node:
             )
 
         # Create cropped heightmap for the ground underneath the structure.
-        baseLineHeightMap, oceanFloorHeightMap = mapTools.calcHeightMap(buildArea)
+        self.baseLineHeightMap = baseLineHeightMap
+        self.oceanFloorHeightMap = oceanFloorHeightMap
         self.localHeightMapBaseLine = mapTools.getCroppedGrid(
             grid=baseLineHeightMap,
             globalOrigin=buildArea[:2],
@@ -228,7 +231,9 @@ class Node:
                         parentStructure=self.structure,
                         buildArea=self.buildArea,
                         mapOfStructures=self.mapOfStructures,
-                        rng=self.rng
+                        rng=self.rng,
+                        baseLineHeightMap=self.baseLineHeightMap,
+                        oceanFloorHeightMap=self.oceanFloorHeightMap
                     )
                     placementCost = nextNodeCandidates[nextStructureName].getPlacementCost()
                     if placementCost is not None:

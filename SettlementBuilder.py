@@ -57,6 +57,8 @@ class SettlementBuilder:
                 z=startingPos[2],
                 facing=self.rng.integers(4),
                 buildArea=self.buildArea,
+                baseLineHeightMap=self.baseLineHeightMap,
+                oceanFloorHeightMap=self.oceanFloorHeightMap,
                 mapOfStructures=mapOfStructures,
                 nodeStructurePrototype=startingStructure,
                 rng=self.rng
