@@ -40,6 +40,7 @@ class Structure:
         self._applyCustomProperties()
         self.groundClearance = structurePrototype.groundClearance
 
+        # TODO implement material replacements
         self.materialReplacements = dict()
 
     def setPosition(self, x=None, y=None, z=None):

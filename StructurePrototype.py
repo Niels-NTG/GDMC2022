@@ -3,6 +3,7 @@ import numpy as np
 from nbt import nbt
 import os
 import json
+from materials import AIR, STAIRS, SLABS, ARTIFICIAL, LIQUIDS, PLANTS, TREES
 
 
 # With this class you can load in an NBT-encoded Minecraft Structure file
@@ -38,7 +39,7 @@ class StructurePrototype:
                 if 'connectors' in self.customProperties:
                     # Scan for and then load in structures that serve to connect this structure to another.
                     for connectorProps in self.customProperties['connectors']:
-                        if 'transitionStructure' in connectorProps and connectorProps['transitionStructure'] is not None:
+                        if connectorProps.get('transitionStructure'):
                             transitionStructureFilePath = rootDir + connectorProps['transitionStructure']
                             if connectorProps['transitionStructure'] not in self.transitionStructures:
                                 self.transitionStructures[connectorProps['transitionStructure']] = StructurePrototype(
@@ -62,8 +63,25 @@ class StructurePrototype:
                                                 structureFilePath=decorationStructureFilePath,
                                                 structureName=decoration['decorationStructure']
                                             )
+
                 if 'groundClearance' in self.customProperties:
                     self.groundClearance = self.customProperties['groundClearance']
+
+        self.cost = 0
+        for block in self.nbt['blocks']:
+            blockMaterial = self.getBlockMaterial(block)
+            if blockMaterial in AIR or blockMaterial in LIQUIDS or blockMaterial in PLANTS or blockMaterial in TREES:
+                continue
+            if blockMaterial in STAIRS or blockMaterial in SLABS:
+                self.cost += 0.5
+                continue
+            if blockMaterial in ARTIFICIAL:
+                self.cost += 0.1
+                continue
+            self.cost += 1
+
+    def getBlockMaterial(self, block):
+        return self.nbt["palette"][block["state"].value]['Name'].value
 
     def getSizeX(self):
         return self.nbt["size"][0].value

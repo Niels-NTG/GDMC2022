@@ -61,12 +61,15 @@ class Node:
 
     # Evaluate if the current structure is placable.
     def isPlacable(self):
+        return self.getPlacementCost() is not None
+
+    def getPlacementCost(self):
         if self.localHeightMapBaseLine.shape != (self.structure.getSizeX(), self.structure.getSizeZ()):
-            return False
+            return None
 
         # Prevent structure from burying itself underground
         if self.localHeightMapBaseLine.max() + self.structure.groundClearance > self.structure.y:
-            return False
+            return None
 
         # Check if space is not already occupied by another structure
         # TODO only allow node to be build if no other node is 1 tile in between.
@@ -77,19 +80,19 @@ class Node:
             globalCropFarCorner=self.structure.getFarCornerInWorldSpace()
         )
         if np.any(structureMapCropped > 0):
-            return False
-
-        return True
-
-    def getPlacementCost(self):
-        if not self.isPlacable():
             return None
 
         # Calculate height difference
         # TODO get actual building cost of building each pillar
-        elevationFromOceanFloor = self.structure.y - self.localHeightMapOceanFloor.mean()
+        elevationFromOceanFloor = (self.structure.y - self.localHeightMapOceanFloor.mean())**3
 
-        return elevationFromOceanFloor
+        materialCost = self.structure.prototype.cost
+
+        placementCost = materialCost + elevationFromOceanFloor
+        if globals.constructionBudget - placementCost < 0:
+            return None
+
+        return placementCost
 
     # Set map of structures to a constant to indicate something is already been built here.
     def _updateMapOfStructures(self, structure: Structure):
@@ -189,6 +192,19 @@ class Node:
             z=self.structure.z
         ).place()
 
+    def _chooseNextStructure(self, placementScores):
+        if placementScores is None or len(placementScores) == 0:
+            return None
+        valueSum = np.sum(list(placementScores.values()))
+        weights = []
+        for key, value in placementScores.items():
+            weights.append(
+                value / valueSum
+            )
+        weights = np.reciprocal(weights)
+        weights = weights / np.sum(weights)
+        return self.rng.choice(list(placementScores), p=weights)
+
     def place(self, isStartingNode=False):
 
         self.structure.place()
@@ -239,9 +255,9 @@ class Node:
                     if placementCost is not None:
                         placementScores[nextStructureName] = placementCost
 
-            # Select next node based on which has the highest placement score.
+            # Select next node based on which has the lowest placement cost.
             # TODO have placement looking 2 step into the future with MCTS
-            nextNodeStructureName = mapTools.getMinValueDictKey(placementScores, self.rng)
+            nextNodeStructureName = self._chooseNextStructure(placementScores)
             nextNode = nextNodeCandidates.get(nextNodeStructureName)
 
             # Build transition piece
@@ -252,4 +268,8 @@ class Node:
                     self._placeTransitionStructure(connection.get('transitionStructure'), connectionRotation)
 
             if nextNode:
+                globals.constructionBudget -= placementScores[nextNodeStructureName]
+                print('remaining construction budget: %s after placing %s (cost: %s)' % (
+                    globals.constructionBudget, nextNodeStructureName, placementScores[nextNodeStructureName]
+                ))
                 nextNode.place()

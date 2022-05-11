@@ -15,7 +15,7 @@ import numpy as np
 
 from bitarray import BitArray
 import interface
-from globals import BIOMES
+from materials import BIOMES
 
 
 class CachedSection:

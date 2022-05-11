@@ -1,7 +1,7 @@
 import numpy as np
 import interface
 from worldLoader import WorldSlice
-from globals import AXES, TREES, PLANTS, AIR
+from materials import TREES, PLANTS, AIR
 
 
 def getBuildArea(area=(0, 0, 128, 128)):
@@ -124,18 +124,6 @@ def placePerimeter(fromX, fromZ, sizeX, sizeZ, heightMap, material):
         setBlock(fromX + sizeX, heightMap[sizeX, z], fromZ + z, material)
 
 
-def getDimension(fromX, fromY, fromZ, toX, toY, toZ):
-    if (fromX, fromY, fromZ) == (toX, toY, toZ):
-        return 0, list(AXES)
-    # NOTE: if dimension needs to be known, return isdifferent
-    isflat = np.subtract((fromX, fromY, fromZ), (toX, toY, toZ)) == 0
-    flatSides = []
-    flatSides += ['x'] if isflat[0] else []
-    flatSides += ['y'] if isflat[1] else []
-    flatSides += ['z'] if isflat[2] else []
-    return 3 - isflat.sum(), flatSides
-
-
 def getNextPosition(facing, currentBox=None, nextBox=None):
     if currentBox is None:
         currentBox = [0, 0, 0, 0, 0, 0]
@@ -176,13 +164,3 @@ def rotatePointAroundOrigin(origin, point, rotation):
         point[1],
         int(np.round(np.sin(angle) * (point[0] - origin[0]) + np.cos(angle) * (point[2] - origin[2]) + origin[2], 4))
     ]
-
-
-def getMinValueDictKey(d, rng):
-    if d is None or len(d) == 0:
-        return None
-    # Get key with lowest value
-    firstMinKey = min(d, key=lambda k: d[k])
-    # Find all propertie with that same minimum value and choose a random one from among them.
-    minKeys = [key for key, value in d.items() if value == d[firstMinKey]]
-    return rng.choice(minKeys)
