@@ -2,29 +2,27 @@
   "connectors": [
     {
       "facing": 0,
-      "transitionStructure": "walkway_door",
+      "height": 0,
+      "transitionStructure": null,
       "nextStructure": [
         "hub",
         "walkway",
-        "observation",
         "ladder",
         "walkway_corner_l",
         "walkway_corner_r",
-        "stairs_up",
         "stairs_down"
       ]
     },
     {
       "facing": 2,
-      "transitionStructure": "walkway_door",
+      "height": -1,
+      "transitionStructure": null,
       "nextStructure": [
         "hub",
         "walkway",
-        "observation",
         "ladder",
         "walkway_corner_l",
         "walkway_corner_r",
-        "stairs_up",
         "stairs_down"
       ]
     }
@@ -33,20 +31,11 @@
     {
       "pillars": [
         {
-          "pos": [2, 2],
+          "pos": [3, 2],
           "material": "iron_block"
         }
       ]
-    },
-    {
-      "decorations": [
-        {
-          "decorationStructure": "walkway_balcony",
-          "facing": [1, 3],
-          "origin": [0, 0, 0]
-        },
-        null
-      ]
     }
-  ]
+  ],
+  "offset": [0, -1, 0]
 }

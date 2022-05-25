@@ -6,9 +6,9 @@
       "nextStructure": [
         "hub",
         "walkway",
-        "observation",
         "ladder",
         "stairs_up",
+        "stairs_down",
         "walkway_corner_l"
       ]
     },
@@ -18,9 +18,9 @@
       "nextStructure": [
         "hub",
         "walkway",
-        "observation",
         "ladder",
         "stairs_up",
+        "stairs_down",
         "walkway_corner_l"
       ]
     }

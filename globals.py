@@ -14,7 +14,7 @@ def initialize():
 
 
 def loadStructures():
-    for mainStructureFolder in glob.glob('structures/*/'):
+    for mainStructureFolder in glob.glob('structures11/*/'):
         structureFileName = re.sub(r'^.+/(.+)/$', r'\1', mainStructureFolder)
 
         structureFilePath = mainStructureFolder + '/' + structureFileName

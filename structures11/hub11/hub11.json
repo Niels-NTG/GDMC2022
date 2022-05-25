@@ -1,0 +1,58 @@
+{
+  "connectors": [
+    {
+      "facing": 0,
+      "transitionStructure": "hub11_door",
+      "nextStructure": [
+        "walkway11",
+        "module11"
+      ]
+    },
+    {
+      "facing": 1,
+      "transitionStructure": "hub11_door",
+      "nextStructure": [
+        "walkway11",
+        "module11"
+      ]
+    },
+    {
+      "facing": 2,
+      "transitionStructure": "hub11_door",
+      "nextStructure": [
+        "walkway11",
+        "module11"
+      ]
+    },
+    {
+      "facing": 3,
+      "transitionStructure": "hub11_door",
+      "nextStructure": [
+        "walkway11",
+        "module11"
+      ]
+    }
+  ],
+  "postProcessing": [
+    {
+      "pillars": [
+        {
+          "pos": [3, 3],
+          "material": "minecraft:quartz_pillar"
+        },
+        {
+          "pos": [3, 7],
+          "material": "minecraft:quartz_pillar"
+        },
+        {
+          "pos": [7, 3],
+          "material": "minecraft:quartz_pillar"
+        },
+        {
+          "pos": [7, 7],
+          "material": "minecraft:quartz_pillar"
+        }
+      ]
+    }
+  ]
+}

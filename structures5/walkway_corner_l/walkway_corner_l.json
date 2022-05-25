@@ -6,7 +6,6 @@
       "nextStructure": [
         "hub",
         "walkway",
-        "observation",
         "ladder",
         "stairs_up",
         "stairs_down",
@@ -19,7 +18,6 @@
       "nextStructure": [
         "hub",
         "walkway",
-        "observation",
         "ladder",
         "stairs_up",
         "stairs_down",

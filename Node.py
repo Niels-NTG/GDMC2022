@@ -72,7 +72,6 @@ class Node:
             return None
 
         # Check if space is not already occupied by another structure
-        # TODO only allow node to be build if no other node is 1 tile in between.
         structureMapCropped = mapTools.getCroppedGrid(
             grid=self.mapOfStructures,
             globalOrigin=self.buildArea[:2],

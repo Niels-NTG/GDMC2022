@@ -104,9 +104,9 @@ class Structure:
 
     def getHorizontalCenter(self):
         return [
-            int(np.round(self.getSizeX() / 2)),
+            int(np.floor(self.getSizeX() / 2)),
             self.origin[1],
-            int(np.round(self.getSizeZ() / 2))
+            int(np.floor(self.getSizeZ() / 2))
         ]
 
     def getShortestDimension(self):
