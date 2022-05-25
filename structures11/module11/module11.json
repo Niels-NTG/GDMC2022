@@ -47,6 +47,11 @@
           "facing": [0, 2],
           "origin": [0, 0, 0]
         },
+        {
+          "decorationStructure": "module11_roof_open_observation",
+          "facing": [0, 2],
+          "origin": [0, 0, 0]
+        },
         null
       ]
     }
