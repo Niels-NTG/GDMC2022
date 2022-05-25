@@ -58,6 +58,8 @@ class Node:
         if 'connectors' in self.structure.customProperties:
             if isinstance(self.structure.customProperties['connectors'], list):
                 self.connectors = self.structure.customProperties['connectors']
+                # Shuffle connector order to encourage meandering behaviour.
+                rng.shuffle(self.connectors)
 
     # Evaluate if the current structure is placable.
     def isPlacable(self):
