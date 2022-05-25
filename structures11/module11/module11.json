@@ -39,6 +39,16 @@
           "material": "minecraft:quartz_pillar"
         }
       ]
+    },
+    {
+      "decorations": [
+        {
+          "decorationStructure": "module11_roof_covered_observation",
+          "facing": [0, 2],
+          "origin": [0, 0, 0]
+        },
+        null
+      ]
     }
   ]
 }
