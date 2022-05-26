@@ -52,6 +52,20 @@
           "facing": [0, 2],
           "origin": [0, 0, 0]
         },
+        {
+          "decorationStructure": "module11_ladder",
+          "facing": [0, 2],
+          "origin": [0, 0, 0],
+          "options": {
+            "pillars": [
+              {
+                "pos": [5, 9],
+                "material": "minecraft:quartz_block",
+                "ladder": 2
+              }
+            ]
+          }
+        },
         null
       ]
     }

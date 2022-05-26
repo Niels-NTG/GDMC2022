@@ -22,7 +22,8 @@ class Structure:
                  structurePrototype: StructurePrototype,
                  x: int = 0, y: int = 0, z: int = 0,
                  rotation: int = ROTATE_NORTH,
-                 rotateAroundCenter: bool = True
+                 rotateAroundCenter: bool = True,
+                 customProperties: dict = None
                  ):
         self.prototype = structurePrototype
 
@@ -36,7 +37,12 @@ class Structure:
 
         self.rotateAroundCenter = rotateAroundCenter
 
-        self.customProperties = copy.deepcopy(structurePrototype.customProperties)
+        if customProperties is None:
+            self.customProperties = copy.deepcopy(structurePrototype.customProperties)
+        elif isinstance(customProperties, dict):
+            self.customProperties = copy.deepcopy(customProperties)
+        else:
+            self.customProperties = dict()
         self._applyCustomProperties()
         self.groundClearance = structurePrototype.groundClearance
 
@@ -154,16 +160,24 @@ class Structure:
                 self.z + customOffset[2]
             )
 
-    def _getBlockMaterial(self, block):
+    def getBlockAt(self, x, y, z):
+        for block in self.nbt['blocks']:
+            if block["pos"][0].value == x and block["pos"][1].value == y and block["pos"][2].value == z:
+                return block
+
+    def getBlockMaterial(self, block):
         blockMaterial = self.nbt["palette"][block["state"].value]['Name'].value
         replacementMaterial = self.materialReplacements.get(blockMaterial)
         if replacementMaterial is None:
             return blockMaterial
         return replacementMaterial
 
+    def getBlockMaterialAt(self, x, y, z):
+        return self.getBlockMaterial(self.getBlockAt(x, y, z))
+
     # Get block properties (also known as block states: https://minecraft.fandom.com/wiki/Block_states) of a block.
     # This may contain information on the orientation of a block or open or closed stated of a door.
-    def _getBlockProperties(self, block):
+    def getBlockProperties(self, block):
         properties = dict()
         if "Properties" in self.nbt["palette"][block["state"].value].keys():
             for key in self.nbt["palette"][block["state"].value]["Properties"].keys():
@@ -182,6 +196,9 @@ class Structure:
 
         return properties
 
+    def getBlockPropertiesAt(self, x, y, z):
+        return self.getBlockProperties(self.getBlockAt(x, y, z))
+
     def _applyRotation(self, block):
         currentPosition = [
             block["pos"][0].value,
@@ -197,14 +214,14 @@ class Structure:
     def getMaterialList(self):
         materials = []
         for block in self.nbt["blocks"]:
-            blockMaterial = self._getBlockMaterial(block)
+            blockMaterial = self.getBlockMaterial(block)
             if blockMaterial not in materials:
                 materials.append(blockMaterial)
         return materials
 
     def place(self, includeAir=True):
         for block in self.nbt["blocks"]:
-            blockMaterial = self._getBlockMaterial(block)
+            blockMaterial = self.getBlockMaterial(block)
 
             if blockMaterial == 'minecraft:structure_void':
                 continue
@@ -214,7 +231,7 @@ class Structure:
                 continue
 
             blockPosition = np.add(self._applyRotation(block), [self.x, self.y, self.z])
-            blockProperties = self._getBlockProperties(block)
+            blockProperties = self.getBlockProperties(block)
             mapTools.setBlock(blockPosition[0], blockPosition[1], blockPosition[2], blockMaterial, blockProperties)
 
         interface.sendBlocks()

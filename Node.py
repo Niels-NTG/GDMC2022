@@ -142,23 +142,27 @@ class Node:
             # If pillar has a facing direction for a ladder defined, put a ladder on this face of the pillar.
             if pillar.get('ladder') is not None:
                 ladderRotation = (self.structure.rotation + pillar.get('ladder')) % 4
-                ladderPosition = mapTools.rotatePointAroundOrigin(
-                    pillarPosition,
-                    np.add(pillarPosition, [0, 0, -1]),
-                    ladderRotation
-                )
-                for ladderY in range(groundLevel, self.structure.y):
-                    mapTools.setBlock(
-                        ladderPosition[0], ladderY, ladderPosition[2],
-                        'ladder',
-                        {
-                            'facing': Structure.ROTATIONS[ladderRotation]
-                        }
-                    )
+                self._placeLadder(pillarPosition, ladderRotation, groundLevel)
+
+    def _placeLadder(self, pillarPosition, ladderRotation, groundLevel):
+        ladderPosition = mapTools.rotatePointAroundOrigin(
+            pillarPosition,
+            np.add(pillarPosition, [0, 0, -1]),
+            ladderRotation
+        )
+        for ladderY in range(groundLevel, self.structure.y):
+            mapTools.setBlock(
+                ladderPosition[0], ladderY, ladderPosition[2],
+                'ladder',
+                {
+                    'facing': Structure.ROTATIONS[ladderRotation]
+                }
+            )
 
     # Place decoration structures post-processing function.
     def _placeDecorations(self, decorations):
         # For each list of decorations, pick only one.
+        # TODO also calculate building cost of decorations
         decoration = self.rng.choice(decorations)
         if decoration is None:
             return
@@ -172,13 +176,46 @@ class Node:
         if isinstance(decoration.get('origin'), list) and len(decoration.get('origin')) == 3:
             decorationOrigin = decoration.get('origin')
 
-        Structure(
+        rotation = (facing + self.structure.rotation) % 4
+
+        decorationStructure = Structure(
             structurePrototype=self.structure.prototype.decorationStructures[decoration.get('decorationStructure')],
-            rotation=(facing + self.structure.rotation) % 4,
+            rotation=rotation,
             x=self.structure.x + decorationOrigin[0],
             y=self.structure.y + decorationOrigin[1],
             z=self.structure.z + decorationOrigin[2]
-        ).place()
+        )
+
+        decorationOptions = decoration.get('options')
+        if decorationOptions:
+            if isinstance(decorationOptions.get('pillars'), list):
+                nodePivot = self.structure.getHorizontalCenter()
+                for pillar in decorationOptions.get('pillars'):
+                    pillarPosition = mapTools.rotatePointAroundOrigin(
+                        nodePivot,
+                        [
+                            pillar['pos'][0],
+                            self.structure.y - 1,
+                            pillar['pos'][1]
+                        ],
+                        decorationStructure.rotation
+                    )
+                    groundLevel = self.localHeightMapOceanFloor[
+                        pillarPosition[0],
+                        pillarPosition[2]
+                    ]
+                    pillarPosition = np.add(pillarPosition, [self.structure.x, 0, self.structure.z])
+                    mapTools.fill(
+                        *pillarPosition,
+                        pillarPosition[0], groundLevel, pillarPosition[2],
+                        pillar.get('material')
+                    )
+
+                    if pillar.get('ladder') is not None:
+                        ladderRotation = (decorationStructure.rotation + pillar.get('ladder')) % 4
+                        self._placeLadder(pillarPosition, ladderRotation, groundLevel)
+
+        decorationStructure.place()
 
     # Place transition structure.
     # This is a structure inserted inside of the node's structure to create a transition (eg. a doorway) to the next

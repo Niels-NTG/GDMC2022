@@ -80,8 +80,28 @@ class StructurePrototype:
                 continue
             self.cost += 1
 
+    def getBlockAt(self, x, y, z):
+        for block in self.nbt['blocks']:
+            if block["pos"][0].value == x and block["pos"][1].value == y and block["pos"][2].value == z:
+                return block
+
     def getBlockMaterial(self, block):
         return self.nbt["palette"][block["state"].value]['Name'].value
+
+    def getBlockMaterialAt(self, x, y, z):
+        return self.getBlockMaterial(self.getBlockAt(x, y, z))
+
+    # Get block properties (also known as block states: https://minecraft.fandom.com/wiki/Block_states) of a block.
+    # This may contain information on the orientation of a block or open or closed stated of a door.
+    def getBlockProperties(self, block):
+        properties = dict()
+        if "Properties" in self.nbt["palette"][block["state"].value].keys():
+            for key in self.nbt["palette"][block["state"].value]["Properties"].keys():
+                properties[key] = self.nbt["palette"][block["state"].value]["Properties"][key].value
+        return properties
+
+    def getBlockPropertiesAt(self, x, y, z):
+        return self.getBlockProperties(self.getBlockAt(x, y, z))
 
     def getSizeX(self):
         return self.nbt["size"][0].value
