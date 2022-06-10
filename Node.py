@@ -62,6 +62,9 @@ class Node:
                 # Shuffle connector order to encourage meandering behaviour.
                 rng.shuffle(self.connectors)
 
+        self.chosenPostProcessingSteps = []
+        self.pickPostProcessingSteps()
+
     # Evaluate if the current structure is placable.
     def isPlacable(self):
         return self.getPlacementCost() is not None
@@ -96,6 +99,18 @@ class Node:
 
         return placementCost
 
+    def pickPostProcessingSteps(self):
+        if isinstance(self.structure.customProperties.get('postProcessing'), list):
+            for operations in self.structure.customProperties.get('postProcessing'):
+                if 'pillars' in operations:
+                    self.chosenPostProcessingSteps.append({
+                        'pillars': operations['pillars']
+                    })
+                    continue
+                if 'decorations' in operations:
+                    self.chosenPostProcessingSteps.append(self._pickDecorations(operations['decorations']))
+                    continue
+
     # Set map of structures to a constant to indicate something is already been built here.
     def _updateMapOfStructures(self, structure: Structure):
         localOrigin, localFarCorner = mapTools.getCrop(
@@ -110,12 +125,15 @@ class Node:
 
     # Run function for each post-processing step.
     def _doPostProcessing(self):
-        if isinstance(self.structure.customProperties.get('postProcessing'), list):
-            for operations in self.structure.customProperties.get('postProcessing'):
-                if 'pillars' in operations:
-                    self._placePillars(operations['pillars'])
-                if 'decorations' in operations:
-                    self._placeDecorations(operations['decorations'])
+        for step in self.chosenPostProcessingSteps:
+            if step is None:
+                continue
+            if 'pillars' in step:
+                self._placePillars(step['pillars'])
+                continue
+            if 'decoration' in step:
+                self._placeDecoration(step['decoration'], step['decorationStructure'])
+                continue
 
     # Place pillars post-processing function.
     def _placePillars(self, pillars):
@@ -161,12 +179,12 @@ class Node:
             )
 
     # Place decoration structures post-processing function.
-    def _placeDecorations(self, decorations):
+    def _pickDecorations(self, decorations):
         # For each list of decorations, pick only one.
         # TODO also calculate building cost of decorations
         decoration = self.rng.choice(decorations)
         if decoration is None:
-            return
+            return None
 
         # Pick random orientation for decoration or one of the pre-defined directions.
         facing = self.rng.integers(4)
@@ -187,6 +205,13 @@ class Node:
             z=self.structure.z + decorationOrigin[2]
         )
 
+        return {
+            'decoration': decoration,
+            'decorationStructure': decorationStructure
+        }
+
+    # Place decoration structures post-processing function.
+    def _placeDecoration(self, decoration, decorationStructure):
         decorationOptions = decoration.get('options')
         if decorationOptions:
             if isinstance(decorationOptions.get('pillars'), list):
