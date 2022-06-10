@@ -179,6 +179,8 @@ class Structure:
     # This may contain information on the orientation of a block or open or closed stated of a door.
     def getBlockProperties(self, block):
         properties = dict()
+        blockData = dict()
+
         if "Properties" in self.nbt["palette"][block["state"].value].keys():
             for key in self.nbt["palette"][block["state"].value]["Properties"].keys():
                 properties[key] = self.nbt["palette"][block["state"].value]["Properties"][key].value
@@ -194,10 +196,30 @@ class Structure:
                     elif properties[key] == "z":
                         properties[key] = "x"
 
-        return properties
+        # Retain all information in the NBT portion of the block (eg. chest content information) if present.
+        # https://minecraft.fandom.com/wiki/Chunk_format#Block_entity_format
+        if 'nbt' in block:
+            if 'Items' in block['nbt']:
+                blockData['Items'] = []
+                for item in block['nbt']['Items']:
+                    blockData['Items'].append({
+                        'id': item['id'].value,
+                        'Count': item['Count'].value,
+                        'Slot': item['Slot'].value
+                    })
+
+        return properties, blockData
 
     def getBlockPropertiesAt(self, x, y, z):
         return self.getBlockProperties(self.getBlockAt(x, y, z))
+
+    def getMaterialList(self):
+        materials = []
+        for block in self.nbt["blocks"]:
+            blockMaterial = self.getBlockMaterial(block)
+            if blockMaterial not in materials:
+                materials.append(blockMaterial)
+        return materials
 
     def _applyRotation(self, block):
         currentPosition = [
@@ -211,14 +233,6 @@ class Structure:
         pivot = self.origin if not self.rotateAroundCenter else self.getHorizontalCenter()
         return mapTools.rotatePointAroundOrigin(pivot, currentPosition, self.rotation)
 
-    def getMaterialList(self):
-        materials = []
-        for block in self.nbt["blocks"]:
-            blockMaterial = self.getBlockMaterial(block)
-            if blockMaterial not in materials:
-                materials.append(blockMaterial)
-        return materials
-
     def place(self, includeAir=True):
         for block in self.nbt["blocks"]:
             blockMaterial = self.getBlockMaterial(block)
@@ -231,8 +245,12 @@ class Structure:
                 continue
 
             blockPosition = np.add(self._applyRotation(block), [self.x, self.y, self.z])
-            blockProperties = self.getBlockProperties(block)
-            mapTools.setBlock(blockPosition[0], blockPosition[1], blockPosition[2], blockMaterial, blockProperties)
+            blockProperties, blockData = self.getBlockProperties(block)
+            mapTools.setBlock(
+                blockPosition[0], blockPosition[1], blockPosition[2],
+                blockMaterial,
+                blockProperties, blockData
+            )
 
         interface.sendBlocks()
         print('placed structure %s at %s %s %s' % (self.prototype.structureName, self.x, self.y, self.z))

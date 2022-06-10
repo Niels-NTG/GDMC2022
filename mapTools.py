@@ -82,10 +82,12 @@ def getCroppedGrid(grid=np.array([]), globalOrigin=(0, 0), globalCropOrigin=(0, 
     return croppedGrid
 
 
-def setBlock(x, y, z, material, properties=None, isBatched=True):
+def setBlock(x, y, z, material, properties=None, blockData=None, isBatched=True):
     if properties is None:
         properties = dict()
-    interface.setBlock(x, y, z, material, properties, isBatched)
+    if blockData is None:
+        blockData = dict()
+    interface.setBlock(x, y, z, material, properties, blockData, isBatched)
 
 
 # Create solid shape filling the given area.

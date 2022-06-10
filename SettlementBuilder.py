@@ -45,7 +45,7 @@ class SettlementBuilder:
         # Map of structures built in the build area.
         mapOfStructures = np.full(shape=self.baseLineHeightMap.shape, fill_value=0)
 
-        startingStructure: StructurePrototype = globals.structurePrototypes['hub11']
+        startingStructure: StructurePrototype = globals.structurePrototypes['module11']
 
         maxPlacementAttempts = 40
         placementTryCount = 0

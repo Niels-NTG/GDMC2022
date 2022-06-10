@@ -12,6 +12,7 @@ __all__ = ['requestBuildArea', 'runCommand',
            '_placeBlockBatched', 'sendBlocks']
 # __version__
 
+import re
 import requests
 from requests.exceptions import ConnectionError
 
@@ -60,20 +61,23 @@ def getBlock(x, y, z):
     return response.text
 
 
-def setBlock(x, y, z, material, properties, isBatched=True):
+def setBlock(x, y, z, material, properties, blockData, isBatched=True):
     serialisedProperties = "[]"
     if properties and isinstance(properties, dict):
         serialisedProperties = "["
         for key in properties.keys():
             serialisedProperties += key + "=" + properties[key] + ","
         serialisedProperties += "]"
+    serialisedBlockData = '{}'
+    if blockData and isinstance(blockData, dict):
+        serialisedBlockData = re.sub(r'(id:)(.+?)(,)', r'\1"\2"\3', str(blockData).replace(' ', '').replace('\'', ''))
 
     if isBatched:
-        return _placeBlockBatched(x, y, z, material, serialisedProperties)
+        return _placeBlockBatched(x, y, z, material, serialisedProperties, serialisedBlockData)
     """**Places a block in the world.**"""
     url = f'http://localhost:9000/blocks?x={x}&y={y}&z={z}'
     try:
-        response = session.put(url, material + serialisedProperties)
+        response = session.put(url, material + serialisedProperties + serialisedBlockData)
     except ConnectionError:
         return "0"
     print("{}, {}, {}: {} - {}".format(x, y, z, response.status_code, response.text))
@@ -85,9 +89,9 @@ def setBlock(x, y, z, material, properties, isBatched=True):
 blockBuffer = []
 
 
-def _placeBlockBatched(x, y, z, material, properties, limit=50):
+def _placeBlockBatched(x, y, z, material, properties, blockData, limit=50):
     """**Place a block in the buffer and send if the limit is exceeded.**"""
-    _registerSetBlock(x, y, z, material, properties)
+    _registerSetBlock(x, y, z, material, properties, blockData)
     if len(blockBuffer) >= limit:
         return sendBlocks(0, 0, 0)
     else:
@@ -97,10 +101,18 @@ def _placeBlockBatched(x, y, z, material, properties, limit=50):
 def sendBlocks(x=0, y=0, z=0, retries=5):
     """**Sends the buffer to the server and clears it.**"""
     global blockBuffer
-    body = str.join("\n", ['~{} ~{} ~{} {}{}'.format(*bp) for bp in blockBuffer])
+    body = str.join("\n", ['~{} ~{} ~{} {}{}{}'.format(*bp) for bp in blockBuffer])
     url = f'http://localhost:9000/blocks?x={x}&y={y}&z={z}'
     try:
         response = session.put(url, body)
+
+        # Since the Forge HTTP mod does not support block data in the body, sent the block data as a
+        # data merge command after the corrosponding block has already been placed.
+        # https://minecraft.fandom.com/wiki/Commands/data
+        for bp in blockBuffer:
+            if bool(re.search(r'{.+}$', bp[-1])):
+                runCommand('data merge block {} {} {} {}'.format(bp[0], bp[1], bp[2], bp[-1]))
+
         clearBlockBuffer()
         return response.text
     except ConnectionError as e:
@@ -109,11 +121,10 @@ def sendBlocks(x=0, y=0, z=0, retries=5):
             return sendBlocks(x, y, z, retries - 1)
 
 
-def _registerSetBlock(x, y, z, material, properties):
+def _registerSetBlock(x, y, z, material, properties, blockData):
     """**Places a block in the buffer.**"""
     global blockBuffer
-    block = (x, y, z, material, properties)
-    # print(block)
+    block = (x, y, z, material, properties, blockData)
     blockBuffer.append(block)
 
 

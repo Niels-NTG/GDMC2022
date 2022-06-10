@@ -21,6 +21,18 @@
   ],
   "postProcessing": [
     {
+      "decorations": [
+        {
+          "decorationStructure": "module11_interior_chests",
+          "original": [0, 0, 0],
+          "facing": [0, 2],
+          "options": {
+            "chests": true
+          }
+        }
+      ]
+    },
+    {
       "pillars": [
         {
           "pos": [1, 3],
