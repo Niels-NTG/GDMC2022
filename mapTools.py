@@ -18,11 +18,10 @@ def getBuildArea(area=(0, 0, 128, 128)):
         area = (x1, z1, x2 - x1, z2 - z1)
 
     print("working in area xz s%s" % (str(area)))
-    return area
+    return area, WorldSlice(rect=area)
 
 
-def calcHeightMap(buildArea):
-    worldSlice = WorldSlice(rect=buildArea)
+def calcHeightMap(worldSlice):
     area = worldSlice.rect
 
     blockFilter = TREES + PLANTS + AIR

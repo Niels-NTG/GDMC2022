@@ -4,7 +4,8 @@ import globals
 import mapTools
 from Structure import Structure
 from StructurePrototype import StructurePrototype
-from materials import INVENTORYLOOKUP
+from materials import INVENTORYLOOKUP, SOILS, PLANTS, TREES, AIR
+from worldLoader import WorldSlice
 
 
 class Node:
@@ -18,12 +19,14 @@ class Node:
                  nodeStructurePrototype: StructurePrototype = None,
                  rng=np.random.default_rng(),
                  baseLineHeightMap=np.array([]),
-                 oceanFloorHeightMap=np.array([])
+                 oceanFloorHeightMap=np.array([]),
+                 worldSlice: WorldSlice = None
                  ):
 
         self.rng = rng
         self.buildArea = buildArea
         self.mapOfStructures = mapOfStructures
+        self.worldSlice = worldSlice
 
         # Create structure instance.
         self.structure = Structure(
@@ -253,20 +256,38 @@ class Node:
                     if blockMaterial not in INVENTORYLOOKUP:
                         continue
 
-                    if self.rng.random() < 0.9:
+                    if self.rng.random() < 0.8:
                         decorationStructure.markBlockAsUnplacable(block)
                         continue
 
                     newInventory = []
                     inventoryDimensions = INVENTORYLOOKUP[blockMaterial]
+
+                    natureSampleMaterials = SOILS + PLANTS + TREES
                     for inventorySlot in range(inventoryDimensions[0] * inventoryDimensions[1]):
-                        if self.rng.random() > 0.5:
-                            newInventory.append({
-                                'x': self.rng.integers(inventoryDimensions[0]),
-                                'y': self.rng.integers(inventoryDimensions[1]),
-                                'material': 'minecraft:dirt',
-                                'amount': self.rng.integers(1, 22)
-                            })
+
+                        if self.rng.random() < 0.2:
+                            continue
+
+                        randomX = self.rng.integers(self.structure.getSizeX())
+                        randomZ = self.rng.integers(self.structure.getSizeZ())
+                        heightMapSample = self.localHeightMapOceanFloor[randomX, randomZ]
+                        sampleBlock = self.worldSlice.getBlockAt(
+                            self.structure.x + randomX,
+                            self.rng.integers(heightMapSample - 2, heightMapSample + 2),
+                            self.structure.z + randomZ
+                        )
+                        if sampleBlock not in natureSampleMaterials or sampleBlock in AIR:
+                            continue
+
+                        newInventory.append({
+                            'x': self.rng.integers(inventoryDimensions[0]),
+                            'y': self.rng.integers(inventoryDimensions[1]),
+                            'material': sampleBlock,
+                            'amount': self.rng.integers(1, 9)
+                        })
+                        # TODO add paper with science sample description
+                        # TODO Add tools and scientific instruments to chests
 
                     decorationStructure.setInventoryBlockContents(
                         block,
@@ -345,7 +366,8 @@ class Node:
                         mapOfStructures=self.mapOfStructures,
                         rng=self.rng,
                         baseLineHeightMap=self.baseLineHeightMap,
-                        oceanFloorHeightMap=self.oceanFloorHeightMap
+                        oceanFloorHeightMap=self.oceanFloorHeightMap,
+                        worldSlice=self.worldSlice
                     )
                     placementCost = nextNodeCandidates[nextStructureName].getPlacementCost()
                     if placementCost is not None:

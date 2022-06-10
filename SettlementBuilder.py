@@ -14,12 +14,12 @@ class SettlementBuilder:
         self.rng = np.random.default_rng()
 
         # /setbuildarea ~ ~ ~ ~32 ~12 ~32
-        self.buildArea = mapTools.getBuildArea()
+        self.buildArea, worldSlice = mapTools.getBuildArea()
 
         globals.constructionBudget = 1000
 
         # # Height map of the build area.
-        self.baseLineHeightMap, self.oceanFloorHeightMap = mapTools.calcHeightMap(self.buildArea)
+        self.baseLineHeightMap, self.oceanFloorHeightMap = mapTools.calcHeightMap(worldSlice)
 
         # DEBUG
         # mapTools.fill(
@@ -59,6 +59,7 @@ class SettlementBuilder:
                 z=startingPos[2],
                 facing=self.rng.integers(4),
                 buildArea=self.buildArea,
+                worldSlice=worldSlice,
                 baseLineHeightMap=self.baseLineHeightMap,
                 oceanFloorHeightMap=self.oceanFloorHeightMap,
                 mapOfStructures=mapOfStructures,
