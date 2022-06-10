@@ -692,11 +692,16 @@ CARPETS = ('minecraft:white_carpet', 'minecraft:orange_carpet',
            'minecraft:brown_carpet', 'minecraft:green_carpet',
            'minecraft:red_carpet', 'minecraft:black_carpet')
 
+INVENTORY = ('minecraft:barrel', 'minecraft:chest', 'minecraft:trapped_chest',
+             'minecraft:dispenser', 'minecraft:dropper', 'minecraft:hopper',
+             'minecraft:brewing_stand')
+
 
 ARTIFICIAL = ('minecraft:grass_path', 'minecraft:cobblestone') \
     + STAIRS + SLABS + FENCES + WALLS + GLASS + LIGHTSOURCES \
     + WIRING + RAILS + SWITCHES + PRESSUREPLATES + DOORS + TRAPDOORS + GATES \
-    + HEADS + SIGNS + ANVILS + BEDS + FURNACES + SHULKERBOXES + WOOLS + CARPETS
+    + HEADS + SIGNS + ANVILS + BEDS + FURNACES + SHULKERBOXES + WOOLS + CARPETS \
+    + INVENTORY
 
 # ================================================= grouped by obtrusiveness
 

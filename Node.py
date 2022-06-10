@@ -88,12 +88,18 @@ class Node:
             return None
 
         # Calculate height difference
-        # TODO get actual building cost of building each pillar
         elevationFromOceanFloor = (self.structure.y - self.localHeightMapOceanFloor.mean())**3
 
         materialCost = self.structure.prototype.cost
 
-        placementCost = materialCost + elevationFromOceanFloor
+        postProcessingStepsCost = 0
+        for step in self.chosenPostProcessingSteps:
+            if step is None:
+                continue
+            if 'decorationStructure' in step:
+                postProcessingStepsCost += step['decorationStructure'].prototype.cost
+
+        placementCost = materialCost + elevationFromOceanFloor + postProcessingStepsCost
         if globals.constructionBudget - placementCost < 0:
             return None
 
@@ -180,8 +186,8 @@ class Node:
 
     # Place decoration structures post-processing function.
     def _pickDecorations(self, decorations):
+        # TODO pick decoration based on global requirements (eg. needs at least one access ladder)
         # For each list of decorations, pick only one.
-        # TODO also calculate building cost of decorations
         decoration = self.rng.choice(decorations)
         if decoration is None:
             return None
