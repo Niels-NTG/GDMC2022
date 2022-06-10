@@ -70,7 +70,7 @@ def setBlock(x, y, z, material, properties, blockData, isBatched=True):
         serialisedProperties += "]"
     serialisedBlockData = '{}'
     if blockData and isinstance(blockData, dict):
-        serialisedBlockData = re.sub(r'(id:)(.+?)(,)', r'\1"\2"\3', str(blockData).replace(' ', '').replace('\'', ''))
+        serialisedBlockData = re.sub(r'(id:)(.+?)([},])', r'\1"\2"\3', str(blockData).replace(' ', '').replace('\'', ''))
 
     if isBatched:
         return _placeBlockBatched(x, y, z, material, serialisedProperties, serialisedBlockData)

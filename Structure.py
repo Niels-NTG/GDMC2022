@@ -3,6 +3,7 @@ import numpy as np
 from StructurePrototype import StructurePrototype
 import interface
 import mapTools
+from materials import INVENTORYLOOKUP
 
 # With this class you can load in an NBT-encoded Minecraft Structure file
 # (https://minecraft.fandom.com/wiki/Structure_Block_file_format) and place them in the world.
@@ -207,6 +208,8 @@ class Structure:
                         'Count': item['Count'].value,
                         'Slot': item['Slot'].value
                     })
+        if isinstance(block.tags[-1], dict):
+            blockData = {**blockData, **block.tags[-1]}
 
         return properties, blockData
 
@@ -233,11 +236,42 @@ class Structure:
         pivot = self.origin if not self.rotateAroundCenter else self.getHorizontalCenter()
         return mapTools.rotatePointAroundOrigin(pivot, currentPosition, self.rotation)
 
+    def markBlockAsUnplacable(self, block):
+        block.tags.append('DO_NOT_PLACE')
+
+    # https://minecraft.fandom.com/wiki/Chest#Block_data
+    def setInventoryBlockContents(self, block, chestItems):
+
+        inventoryDimensions = INVENTORYLOOKUP[self.getBlockMaterial(block)]
+
+        inventorySlots = np.reshape(
+            range(inventoryDimensions[0] * inventoryDimensions[1]),
+            (inventoryDimensions[1], inventoryDimensions[0])
+        )
+
+        newChestContents = []
+        for chestItem in chestItems:
+            slotIndex = inventorySlots[
+                min(chestItem['y'], inventoryDimensions[1] - 1),
+                min(chestItem['x'], inventoryDimensions[0] - 1)
+            ]
+            newChestContents.append({
+                'Slot': slotIndex,
+                'Count': chestItem['amount'],
+                'id': chestItem['material']
+            })
+
+        if isinstance(block.tags[-1], dict) is False:
+            block.tags.append(dict({'Items': []}))
+        block.tags[-1]['Items'] = newChestContents
+
     def place(self, includeAir=True):
         for block in self.nbt["blocks"]:
             blockMaterial = self.getBlockMaterial(block)
 
             if blockMaterial == 'minecraft:structure_void':
+                continue
+            if block.tags[-1] == 'DO_NOT_PLACE':
                 continue
 
             # Skip empty parts of the structure unless includeAir is True.

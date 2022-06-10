@@ -4,6 +4,7 @@ import globals
 import mapTools
 from Structure import Structure
 from StructurePrototype import StructurePrototype
+from materials import INVENTORYLOOKUP
 
 
 class Node:
@@ -214,6 +215,32 @@ class Node:
                     if pillar.get('ladder') is not None:
                         ladderRotation = (decorationStructure.rotation + pillar.get('ladder')) % 4
                         self._placeLadder(pillarPosition, ladderRotation, groundLevel)
+
+            if decorationOptions.get('chests') is True:
+                for block in decorationStructure.nbt['blocks']:
+                    blockMaterial = decorationStructure.getBlockMaterial(block)
+                    if blockMaterial not in INVENTORYLOOKUP:
+                        continue
+
+                    if self.rng.random() < 0.9:
+                        decorationStructure.markBlockAsUnplacable(block)
+                        continue
+
+                    newInventory = []
+                    inventoryDimensions = INVENTORYLOOKUP[blockMaterial]
+                    for inventorySlot in range(inventoryDimensions[0] * inventoryDimensions[1]):
+                        if self.rng.random() > 0.5:
+                            newInventory.append({
+                                'x': self.rng.integers(inventoryDimensions[0]),
+                                'y': self.rng.integers(inventoryDimensions[1]),
+                                'material': 'minecraft:dirt',
+                                'amount': self.rng.integers(1, 22)
+                            })
+
+                    decorationStructure.setInventoryBlockContents(
+                        block,
+                        newInventory
+                    )
 
         decorationStructure.place()
 
