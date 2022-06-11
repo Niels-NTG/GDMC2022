@@ -1,5 +1,6 @@
 import numpy as np
 import copy
+import string
 import globals
 import mapTools
 from Structure import Structure
@@ -274,32 +275,61 @@ class Node:
                     # For each inventory slot...
                     for inventorySlot in range(inventoryDimensions[0] * inventoryDimensions[1]):
 
-                        # If less than threshold, skip this inventory slot
-                        if self.rng.random() < 0.2:
+                        # # If less than threshold, skip this inventory slot
+                        if self.rng.random() < 0.5:
                             continue
 
                         # Get random block from ground of this node structure.
                         randomX = self.rng.integers(self.structure.getSizeX())
                         randomZ = self.rng.integers(self.structure.getSizeZ())
                         heightMapSample = self.localHeightMapOceanFloor[randomX, randomZ]
-                        sampleBlock = self.worldSlice.getBlockAt(
+                        sampleMaterial = self.worldSlice.getBlockAt(
                             self.structure.x + randomX,
                             self.rng.integers(heightMapSample - 2, heightMapSample + 2),
                             self.structure.z + randomZ
                         )
-                        if sampleBlock not in natureSampleMaterials or sampleBlock in AIR:
+                        if sampleMaterial not in natureSampleMaterials or sampleMaterial in AIR:
                             continue
                         newInventory.append({
                             'x': self.rng.integers(inventoryDimensions[0]),
                             'y': self.rng.integers(inventoryDimensions[1]),
-                            'material': sampleBlock,
+                            'material': sampleMaterial,
                             'amount': self.rng.integers(1, 9)
                         })
                         # TODO add paper with science sample description
+                        if self.rng.random() < 0.8:
+                            continue
+                        randomCodes = ''.join(self.rng.choice(list(string.hexdigits), size=10))
+                        bookText = \
+                            'SAMPLE REPORT §4{}§r\n'.format(randomCodes) + \
+                            'date: §d{}/{}/{}:{}§r\n'.format(
+                                self.rng.integers(1, 9),
+                                self.rng.integers(1, 11),
+                                # TODO dynasty year
+                                # TODO convert local time to alien planet time (see Mars rover time logging)
+                                self.rng.integers(20, 28),
+                                self.rng.integers(0, 61),
+                                self.rng.integers(0, 25)
+                            ) + \
+                            'SUBJECT: §a SOIL SAMPLE OF {}'.format(sampleMaterial)
+                        bookData = mapTools.writeBook(
+                            text=bookText,
+                            title='$4 SAMPLE REPORT {}'.format(randomCodes),
+                            author='Me'
+                        )
+                        newInventory.append({
+                            'x': self.rng.integers(inventoryDimensions[0]),
+                            'y': self.rng.integers(inventoryDimensions[1]),
+                            'material': 'minecraft:written_book',
+                            'amount': 1,
+                            'tag': bookData
+                        })
+
                         # TODO Add tools and scientific instruments to chests
 
-                    decorationStructure.setInventoryBlockContents(
+                    mapTools.setInventoryBlockContents(
                         block,
+                        blockMaterial,
                         newInventory
                     )
 

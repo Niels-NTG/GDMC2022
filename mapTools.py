@@ -1,7 +1,8 @@
+from functools import lru_cache
 import numpy as np
 import interface
 from worldLoader import WorldSlice
-from materials import TREES, PLANTS, AIR
+from materials import TREES, PLANTS, AIR, INVENTORYLOOKUP, INVENTORY, ASCIIPIXELS
 
 
 def getBuildArea(area=(0, 0, 128, 128)):
@@ -165,3 +166,150 @@ def rotatePointAroundOrigin(origin, point, rotation):
         point[1],
         int(np.round(np.sin(angle) * (point[0] - origin[0]) + np.cos(angle) * (point[2] - origin[2]) + origin[2]))
     ]
+
+
+# https://minecraft.fandom.com/wiki/Chest#Block_data
+def setInventoryBlockContents(block, blockMaterial, inventoryItems):
+    if blockMaterial not in INVENTORY:
+        return
+
+    newChestContents = []
+
+    # Convert x,y inventory locaitons into inventory slot indexes.
+    inventoryDimensions = INVENTORYLOOKUP[blockMaterial]
+    inventorySlots = np.reshape(
+        range(inventoryDimensions[0] * inventoryDimensions[1]),
+        (inventoryDimensions[1], inventoryDimensions[0])
+    )
+
+    for chestItem in inventoryItems:
+        slotIndex = inventorySlots[
+            min(chestItem['y'], inventoryDimensions[1] - 1),
+            min(chestItem['x'], inventoryDimensions[0] - 1)
+        ]
+        newChestContents.append({
+            'Slot': slotIndex,
+            'Count': chestItem.get('amount'),
+            'id': chestItem.get('material'),
+            'tag': chestItem.get('tag')
+        })
+
+    # Since I don't know how to write NBT data structures, just hack an additional
+    # Items object to the end of the tags list. This should not modify the prototype
+    # NBT data, only this instance (let me know if you find out otherwise).
+    if isinstance(block.tags[-1], dict) is False:
+        block.tags.append(dict({'Items': []}))
+    block.tags[-1]['Items'] = newChestContents
+    print(newChestContents)
+
+
+def createBookForLectern(
+        text='ExampleText',
+        title='Chronicle',
+        author='OBK-1',
+        bookType='minecraft:written_book'
+):
+    return dict({
+        'Book': {
+            'id': bookType,
+            'Count': 1,
+            'tag': writeBook(text, title, author)
+        },
+        'Page': 0
+    })
+
+
+def writeBook(
+        text='ExampleText',
+        title='Chronicle',
+        author='OBK-1'
+):
+    r"""**Return NBT data for a correctly formatted book**.
+    The following special characters are used for formatting the book:
+    - `\n`: New line
+    - `\f`: Form/page break
+    - `§0`: Black text
+    - '§1': Dark blue text
+    - '§2': Dark_green text
+    - '§3': Dark_aqua text
+    - '§4': Dark_red text
+    - '§5': Dark_purple text
+    - '§6': Gold text
+    - '§7': Gray text
+    - '§8': Dark_gray text
+    - '§9': Blue text
+    - `§a`: Green text
+    - `§b`: Aqua text
+    - `§c`: Red text
+    - `§d`: Light_purple text
+    - `§e`: Yellow text
+    - `§f`: White text
+    - `§k`: Obfuscated text
+    - `§l`: **Bold** text
+    - `§m`: ~~Strikethrough~~ text
+    - `§n`: __Underline__ text
+    - `§o`: *Italic* text
+    - `§r`: Reset text formatting
+    - `\\\\s`: When at start of page, print page as string directly
+    - `\\c`: When at start of line, align text to center
+    - `\\r`: When at start of line, align text to right side
+    NOTE: For supported special characters see
+        https://minecraft.fandom.com/wiki/Language#Font
+    IMPORTANT: When using `\\s` text is directly interpreted by Minecraft,
+        so all line breaks must be `\\\\n` to function
+    """
+    linesLeft = LINES = 14  # per page
+    pixelsLeft = PIXELS = 113  # per line
+
+    bookData = dict({
+        'title': title,
+        'author': author
+    })
+    pages = []
+
+    def addPage(pageText):
+        pages.append(str({
+            'text': pageText
+        }))
+
+    @lru_cache()
+    def fontwidth(s):
+        """**Return the length of a word based on character width**.
+        If a letter is not found, a width of 9 is assumed
+        A character spacing of 1 is automatically integrated
+        """
+        return sum([ASCIIPIXELS[letter] + 1
+                    if letter in ASCIIPIXELS
+                    else 10
+                    for letter in s]) - 1
+
+    splitText = text.split('\f')
+    for textFragment in splitText:
+        pageContent = ''
+
+        fragmentLines = textFragment.split('\n')
+        for line in fragmentLines:
+            words = line.split()
+            for word in words:
+                nextWord = word + ' '
+                wordWidth = fontwidth(nextWord)
+                if wordWidth > pixelsLeft:
+                    linesLeft -= 1
+                    pixelsLeft = PIXELS
+                    if linesLeft <= 0:
+                        linesLeft = LINES
+                        addPage(pageContent)
+                        pageContent = ''
+                pageContent += nextWord
+                pixelsLeft -= wordWidth
+            pageContent += '\n\n'
+            linesLeft -= 2
+            pixelsLeft = PIXELS
+            if linesLeft <= 0:
+                linesLeft = LINES
+                addPage(pageContent)
+                pageContent = ''
+        addPage(pageContent)
+
+    bookData['pages'] = pages
+    return bookData

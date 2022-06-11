@@ -70,7 +70,7 @@ def setBlock(x, y, z, material, properties, blockData, isBatched=True):
         serialisedProperties += "]"
     serialisedBlockData = '{}'
     if blockData and isinstance(blockData, dict):
-        serialisedBlockData = re.sub(r'(id:)(.+?)([},])', r'\1"\2"\3', str(blockData).replace(' ', '').replace('\'', ''))
+        serialisedBlockData = str(blockData)
 
     if isBatched:
         return _placeBlockBatched(x, y, z, material, serialisedProperties, serialisedBlockData)
@@ -101,7 +101,9 @@ def _placeBlockBatched(x, y, z, material, properties, blockData, limit=50):
 def sendBlocks(x=0, y=0, z=0, retries=5):
     """**Sends the buffer to the server and clears it.**"""
     global blockBuffer
-    body = str.join("\n", ['~{} ~{} ~{} {}{}{}'.format(*bp) for bp in blockBuffer])
+    body = str.join("\n", ['~{} ~{} ~{} {}{}'.format(*bp) for bp in blockBuffer])
+    # version with space for block data object
+    # body = str.join("\n", ['~{} ~{} ~{} {}{}{}'.format(*bp) for bp in blockBuffer])
     url = f'http://localhost:9000/blocks?x={x}&y={y}&z={z}'
     try:
         response = session.put(url, body)
