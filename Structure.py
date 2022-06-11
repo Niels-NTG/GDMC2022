@@ -240,17 +240,17 @@ class Structure:
         block.tags.append('DO_NOT_PLACE')
 
     # https://minecraft.fandom.com/wiki/Chest#Block_data
-    def setInventoryBlockContents(self, block, chestItems):
+    def setInventoryBlockContents(self, block, inventoryItems):
+        newChestContents = []
 
+        # Convert x,y inventory locaitons into inventory slot indexes.
         inventoryDimensions = INVENTORYLOOKUP[self.getBlockMaterial(block)]
-
         inventorySlots = np.reshape(
             range(inventoryDimensions[0] * inventoryDimensions[1]),
             (inventoryDimensions[1], inventoryDimensions[0])
         )
 
-        newChestContents = []
-        for chestItem in chestItems:
+        for chestItem in inventoryItems:
             slotIndex = inventorySlots[
                 min(chestItem['y'], inventoryDimensions[1] - 1),
                 min(chestItem['x'], inventoryDimensions[0] - 1)
@@ -261,6 +261,9 @@ class Structure:
                 'id': chestItem['material']
             })
 
+        # Since I don't know how to write NBT data structures, just hack an additional
+        # Items object to the end of the tags list. This should not modify the prototype
+        # NBT data, only this instance (let me know if you find out otherwise).
         if isinstance(block.tags[-1], dict) is False:
             block.tags.append(dict({'Items': []}))
         block.tags[-1]['Items'] = newChestContents

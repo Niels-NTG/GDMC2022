@@ -4,7 +4,7 @@ import globals
 import mapTools
 from Structure import Structure
 from StructurePrototype import StructurePrototype
-from materials import INVENTORYLOOKUP, SOILS, PLANTS, TREES, AIR
+from materials import INVENTORYLOOKUP, INVENTORY, SOILS, PLANTS, TREES, AIR
 from worldLoader import WorldSlice
 
 
@@ -252,23 +252,33 @@ class Node:
 
             if decorationOptions.get('chests') is True:
                 for block in decorationStructure.nbt['blocks']:
+
+                    # Check if block has an inventory which can be filled.
                     blockMaterial = decorationStructure.getBlockMaterial(block)
-                    if blockMaterial not in INVENTORYLOOKUP:
+                    if blockMaterial not in INVENTORY:
                         continue
 
+                    # If less than threshold, mark inventory block as not placable.
                     if self.rng.random() < 0.8:
                         decorationStructure.markBlockAsUnplacable(block)
                         continue
 
-                    newInventory = []
+                    # Get dimensions/size of the inventory block (eg. (9,3) for minecraft:chest)
                     inventoryDimensions = INVENTORYLOOKUP[blockMaterial]
 
+                    newInventory = []
+
+                    # Materials which can be sampled for the surroundings to put in chests.
                     natureSampleMaterials = SOILS + PLANTS + TREES
+
+                    # For each inventory slot...
                     for inventorySlot in range(inventoryDimensions[0] * inventoryDimensions[1]):
 
+                        # If less than threshold, skip this inventory slot
                         if self.rng.random() < 0.2:
                             continue
 
+                        # Get random block from ground of this node structure.
                         randomX = self.rng.integers(self.structure.getSizeX())
                         randomZ = self.rng.integers(self.structure.getSizeZ())
                         heightMapSample = self.localHeightMapOceanFloor[randomX, randomZ]
@@ -279,7 +289,6 @@ class Node:
                         )
                         if sampleBlock not in natureSampleMaterials or sampleBlock in AIR:
                             continue
-
                         newInventory.append({
                             'x': self.rng.integers(inventoryDimensions[0]),
                             'y': self.rng.integers(inventoryDimensions[1]),
