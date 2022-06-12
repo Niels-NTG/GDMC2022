@@ -24,7 +24,6 @@
       "decorations": [
         {
           "decorationStructure": "module11_interior_chests",
-          "origin": [0, 0, 0],
           "facing": [0, 2],
           "options": {
             "chests": true
@@ -56,53 +55,43 @@
       "decorations": [
         {
           "decorationStructure": "module11_roof_device_1a",
-          "facing": [0],
-          "origin": [0, 0, 0]
+          "facing": [0]
         },
         {
           "decorationStructure": "module11_roof_device_1b",
-          "facing": [0],
-          "origin": [0, 0, 0]
+          "facing": [0]
         },
         {
           "decorationStructure": "module11_roof_device_1d",
-          "facing": [0],
-          "origin": [0, 0, 0]
+          "facing": [0]
         },
         {
           "decorationStructure": "module11_roof_device_1e",
-          "facing": [0],
-          "origin": [0, 0, 0]
+          "facing": [0]
         },
         {
           "decorationStructure": "module11_roof_device_1f",
-          "facing": [0],
-          "origin": [0, 0, 0]
+          "facing": [0]
         },
         {
           "decorationStructure": "module11_roof_device_1g",
-          "facing": [0],
-          "origin": [0, 0, 0]
+          "facing": [0]
         },
         {
           "decorationStructure": "module11_roof_device_1h",
-          "facing": [0],
-          "origin": [0, 0, 0]
+          "facing": [0]
         },
         {
           "decorationStructure": "module11_roof_device_1i",
-          "facing": [0],
-          "origin": [0, 0, 0]
+          "facing": [0]
         },
         {
           "decorationStructure": "module11_roof_device_1j",
-          "facing": [0],
-          "origin": [0, 0, 0]
+          "facing": [0]
         },
         {
           "decorationStructure": "module11_roof_solar_panel",
-          "facing": [0],
-          "origin": [0, 0, 0]
+          "facing": [0]
         },
         null
       ]
@@ -111,48 +100,39 @@
       "decorations": [
         {
           "decorationStructure": "module11_roof_device_1a",
-          "facing": [2],
-          "origin": [0, 0, 0]
+          "facing": [2]
         },
         {
           "decorationStructure": "module11_roof_device_1b",
-          "facing": [2],
-          "origin": [0, 0, 0]
+          "facing": [2]
         },
         {
           "decorationStructure": "module11_roof_device_1d",
-          "facing": [2],
-          "origin": [0, 0, 0]
+          "facing": [2]
         },
         {
           "decorationStructure": "module11_roof_device_1e",
-          "facing": [2],
-          "origin": [0, 0, 0]
+          "facing": [2]
         },
         {
           "decorationStructure": "module11_roof_device_1f",
-          "facing": [2],
-          "origin": [0, 0, 0]
+          "facing": [2]
         },
         {
           "decorationStructure": "module11_roof_device_1g",
-          "facing": [2],
-          "origin": [0, 0, 0]
+          "facing": [2]
         },
         {
           "decorationStructure": "module11_roof_device_1h",
-          "facing": [2],
-          "origin": [0, 0, 0]
+          "facing": [2]
         },
         {
           "decorationStructure": "module11_roof_device_1i",
-          "facing": [2],
-          "origin": [0, 0, 0]
+          "facing": [2]
         },
         {
           "decorationStructure": "module11_roof_device_1j",
-          "facing": [2],
-          "origin": [0, 0, 0]
+          "facing": [2]
         },
         null
       ]
@@ -161,53 +141,43 @@
       "decorations": [
         {
           "decorationStructure": "module11_roof_device_2a",
-          "facing": [0],
-          "origin": [0, 0, 0]
+          "facing": [0]
         },
         {
           "decorationStructure": "module11_roof_device_2b",
-          "facing": [0],
-          "origin": [0, 0, 0]
+          "facing": [0]
         },
         {
           "decorationStructure": "module11_roof_device_2c",
-          "facing": [0],
-          "origin": [0, 0, 0]
+          "facing": [0]
         },
         {
           "decorationStructure": "module11_roof_device_2d",
-          "facing": [0],
-          "origin": [0, 0, 0]
+          "facing": [0]
         },
         {
           "decorationStructure": "module11_roof_device_2e",
-          "facing": [0],
-          "origin": [0, 0, 0]
+          "facing": [0]
         },
         {
           "decorationStructure": "module11_roof_device_2f",
-          "facing": [0],
-          "origin": [0, 0, 0]
+          "facing": [0]
         },
         {
           "decorationStructure": "module11_roof_device_2g",
-          "facing": [0],
-          "origin": [0, 0, 0]
+          "facing": [0]
         },
         {
           "decorationStructure": "module11_roof_device_2h",
-          "facing": [0],
-          "origin": [0, 0, 0]
+          "facing": [0]
         },
         {
           "decorationStructure": "module11_roof_device_2i",
-          "facing": [0],
-          "origin": [0, 0, 0]
+          "facing": [0]
         },
         {
           "decorationStructure": "module11_roof_device_2j",
-          "facing": [0],
-          "origin": [0, 0, 0]
+          "facing": [0]
         },
         null
       ]
@@ -216,53 +186,43 @@
       "decorations": [
         {
           "decorationStructure": "module11_roof_device_2a",
-          "facing": [2],
-          "origin": [0, 0, 0]
+          "facing": [2]
         },
         {
           "decorationStructure": "module11_roof_device_2b",
-          "facing": [2],
-          "origin": [0, 0, 0]
+          "facing": [2]
         },
         {
           "decorationStructure": "module11_roof_device_2c",
-          "facing": [2],
-          "origin": [0, 0, 0]
+          "facing": [2]
         },
         {
           "decorationStructure": "module11_roof_device_2d",
-          "facing": [2],
-          "origin": [0, 0, 0]
+          "facing": [2]
         },
         {
           "decorationStructure": "module11_roof_device_2e",
-          "facing": [2],
-          "origin": [0, 0, 0]
+          "facing": [2]
         },
         {
           "decorationStructure": "module11_roof_device_2f",
-          "facing": [2],
-          "origin": [0, 0, 0]
+          "facing": [2]
         },
         {
           "decorationStructure": "module11_roof_device_2g",
-          "facing": [2],
-          "origin": [0, 0, 0]
+          "facing": [2]
         },
         {
           "decorationStructure": "module11_roof_device_2h",
-          "facing": [2],
-          "origin": [0, 0, 0]
+          "facing": [2]
         },
         {
           "decorationStructure": "module11_roof_device_2i",
-          "facing": [2],
-          "origin": [0, 0, 0]
+          "facing": [2]
         },
         {
           "decorationStructure": "module11_roof_device_2j",
-          "facing": [2],
-          "origin": [0, 0, 0]
+          "facing": [2]
         },
         null
       ]
@@ -271,18 +231,15 @@
       "decorations": [
         {
           "decorationStructure": "module11_roof_covered_observation",
-          "facing": [0, 2],
-          "origin": [0, 0, 0]
+          "facing": [0, 2]
         },
         {
           "decorationStructure": "module11_roof_open_observation",
-          "facing": [0, 2],
-          "origin": [0, 0, 0]
+          "facing": [0, 2]
         },
         {
           "decorationStructure": "module11_ladder",
           "facing": [0, 2],
-          "origin": [0, 0, 0],
           "options": {
             "pillars": [
               {
@@ -301,15 +258,13 @@
         {
           "decorationStructure": "module11_interior_tank",
           "facing": [0, 2],
-          "origin": [0, 0, 0],
           "options": {
             "plants": "underwater"
           }
         },
         {
           "decorationStructure": "module11_interior_chem_lab",
-          "facing": [0, 2],
-          "origin": [0, 0, 0]
+          "facing": [0, 2]
         },
         null
       ]

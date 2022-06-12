@@ -22,7 +22,6 @@
       "decorations": [
         {
           "decorationStructure": "stairs_up7_interior_chests",
-          "origin": [0, 0, 0],
           "facing": [0],
           "options": {
             "chests": true
