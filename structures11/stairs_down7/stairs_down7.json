@@ -1,0 +1,45 @@
+{
+  "offset": [0, -2, 0],
+  "connectors": [
+    {
+      "facing": 0,
+      "height": 0,
+      "transitionStructure": null,
+      "nextStructure": [
+        "hub11",
+        "module11"
+      ]
+    },
+    {
+      "facing": 2,
+      "height": -2,
+      "transitionStructure": null,
+      "nextStructure": [
+        "hub11",
+        "module11"
+      ]
+    }
+  ],
+  "postProcessing": [
+    {
+      "pillars": [
+        {
+          "pos": [1, 1],
+          "material": "minecraft:quartz_pillar"
+        },
+        {
+          "pos": [1, 5],
+          "material": "minecraft:quartz_pillar"
+        },
+        {
+          "pos": [5, 1],
+          "material": "minecraft:quartz_pillar"
+        },
+        {
+          "pos": [5, 5],
+          "material": "minecraft:quartz_pillar"
+        }
+      ]
+    }
+  ]
+}

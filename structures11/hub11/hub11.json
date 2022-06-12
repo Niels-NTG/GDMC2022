@@ -5,7 +5,9 @@
       "transitionStructure": "hub11_door",
       "nextStructure": [
         "walkway11",
-        "module11"
+        "module11",
+        "stairs_up7",
+        "stairs_down7"
       ]
     },
     {
@@ -13,7 +15,9 @@
       "transitionStructure": "hub11_door",
       "nextStructure": [
         "walkway11",
-        "module11"
+        "module11",
+        "stairs_up7",
+        "stairs_down7"
       ]
     },
     {
@@ -21,7 +25,9 @@
       "transitionStructure": "hub11_door",
       "nextStructure": [
         "walkway11",
-        "module11"
+        "module11",
+        "stairs_up7",
+        "stairs_down7"
       ]
     },
     {
@@ -29,7 +35,9 @@
       "transitionStructure": "hub11_door",
       "nextStructure": [
         "walkway11",
-        "module11"
+        "module11",
+        "stairs_up7",
+        "stairs_down7"
       ]
     }
   ],

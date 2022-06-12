@@ -133,25 +133,25 @@ def getNextPosition(facing, currentBox=None, nextBox=None):
         nextBox = [0, 0, 0, 0, 0, 0]
     if facing == 0:
         return [
-            currentBox[0] + currentBox[3],
+            (currentBox[0] + currentBox[3]) - (currentBox[3] - nextBox[3]),
             nextBox[1],
-            currentBox[2]
+            currentBox[2] - ((currentBox[5] - nextBox[5]) // 2)
         ]
     elif facing == 1:
         return [
-            currentBox[0],
+            currentBox[0] - ((currentBox[3] - nextBox[3]) // 2),
             nextBox[1],
-            currentBox[2] + currentBox[5]
+            (currentBox[2] + currentBox[5]) - (currentBox[5] - nextBox[5])
         ]
     elif facing == 2:
         return [
             currentBox[0] - nextBox[3],
             nextBox[1],
-            currentBox[2]
+            currentBox[2] + ((currentBox[5] - nextBox[5]) // 2)
         ]
     elif facing == 3:
         return [
-            currentBox[0],
+            currentBox[0] + ((currentBox[3] - nextBox[3]) // 2),
             nextBox[1],
             currentBox[2] - nextBox[5]
         ]
@@ -200,7 +200,6 @@ def setInventoryBlockContents(block, blockMaterial, inventoryItems):
     if isinstance(block.tags[-1], dict) is False:
         block.tags.append(dict({'Items': []}))
     block.tags[-1]['Items'] = newChestContents
-    print(newChestContents)
 
 
 def createBookForLectern(
