@@ -333,6 +333,9 @@ class Node:
                         newInventory
                     )
 
+            # TODO implement swapping out different underwater plants
+            # if decorationOptions.get('plants') == 'underwater':
+
         decorationStructure.place()
 
     # Place transition structure.

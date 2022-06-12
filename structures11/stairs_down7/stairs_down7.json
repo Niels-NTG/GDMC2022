@@ -6,7 +6,6 @@
       "height": 0,
       "transitionStructure": null,
       "nextStructure": [
-        "hub11",
         "module11"
       ]
     },
@@ -15,7 +14,6 @@
       "height": -2,
       "transitionStructure": null,
       "nextStructure": [
-        "hub11",
         "module11"
       ]
     }

@@ -186,7 +186,7 @@ class Structure:
                 properties[key] = self.nbt["palette"][block["state"].value]["Properties"][key].value
 
                 # Apply rotation to block property if needed.
-                if key == "facing" and self.rotation != self.ROTATE_NORTH:
+                if key == "facing" and self.rotation != self.ROTATE_NORTH and properties[key] in self.ROTATIONS:
                     properties[key] = self.ROTATIONS[
                         (self.ROTATIONS.index(properties[key]) + self.rotation) % len(self.ROTATIONS)
                         ]
