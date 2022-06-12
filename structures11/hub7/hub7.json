@@ -1,0 +1,66 @@
+{
+  "connectors": [
+    {
+      "facing": 0,
+      "transitionStructure": "hub7_door",
+      "nextStructure": [
+        "walkway11",
+        "module11",
+        "stairs_up7",
+        "stairs_down7"
+      ]
+    },
+    {
+      "facing": 1,
+      "transitionStructure": "hub7_door",
+      "nextStructure": [
+        "walkway11",
+        "module11",
+        "stairs_up7",
+        "stairs_down7"
+      ]
+    },
+    {
+      "facing": 2,
+      "transitionStructure": "hub7_door",
+      "nextStructure": [
+        "walkway11",
+        "module11",
+        "stairs_up7",
+        "stairs_down7"
+      ]
+    },
+    {
+      "facing": 3,
+      "transitionStructure": "hub7_door",
+      "nextStructure": [
+        "walkway11",
+        "module11",
+        "stairs_up7",
+        "stairs_down7"
+      ]
+    }
+  ],
+  "postProcessing": [
+    {
+      "pillars": [
+        {
+          "pos": [1, 1],
+          "material": "minecraft:quartz_pillar"
+        },
+        {
+          "pos": [1, 5],
+          "material": "minecraft:quartz_pillar"
+        },
+        {
+          "pos": [5, 1],
+          "material": "minecraft:quartz_pillar"
+        },
+        {
+          "pos": [5, 5],
+          "material": "minecraft:quartz_pillar"
+        }
+      ]
+    }
+  ]
+}
