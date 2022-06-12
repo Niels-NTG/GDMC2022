@@ -260,7 +260,7 @@ class Node:
                         continue
 
                     # If less than threshold, mark inventory block as not placable.
-                    if self.rng.random() < 0.8:
+                    if self.rng.random() < 0.5:
                         decorationStructure.markBlockAsUnplacable(block)
                         continue
 
