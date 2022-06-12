@@ -5,7 +5,7 @@ import globals
 import mapTools
 from Structure import Structure
 from StructurePrototype import StructurePrototype
-from materials import INVENTORYLOOKUP, INVENTORY, SOILS, PLANTS, TREES, AIR
+from materials import INVENTORYLOOKUP, INVENTORY, SOILS, PLANTS, TREES, AIR, UNDERWATERPLANTS
 from worldLoader import WorldSlice
 
 
@@ -221,7 +221,7 @@ class Node:
         }
 
     # Place decoration structures post-processing function.
-    def _placeDecoration(self, decoration, decorationStructure):
+    def _placeDecoration(self, decoration: dict, decorationStructure: Structure):
         decorationOptions = decoration.get('options')
         if decorationOptions:
             if isinstance(decorationOptions.get('pillars'), list):
@@ -251,6 +251,7 @@ class Node:
                         ladderRotation = (decorationStructure.rotation + pillar.get('ladder')) % 4
                         self._placeLadder(pillarPosition, ladderRotation, groundLevel)
 
+            # For decoration marked to have chest (or other inventory blocks)
             if decorationOptions.get('chests') is True:
                 for block in decorationStructure.nbt['blocks']:
 
@@ -333,8 +334,9 @@ class Node:
                         newInventory
                     )
 
-            # TODO implement swapping out different underwater plants
-            # if decorationOptions.get('plants') == 'underwater':
+            #
+            if decorationOptions.get('plants') == 'underwater':
+                decorationStructure.replaceMaterial('minecraft:seagrass', self.rng.choice(UNDERWATERPLANTS))
 
         decorationStructure.place()
 

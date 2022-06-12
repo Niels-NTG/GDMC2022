@@ -393,6 +393,29 @@ GRASSES = ('minecraft:grass', 'minecraft:tall_grass',
 VINES = ('minecraft:vine',
          'minecraft:weeping_vines', 'minecraft:weeping_vines')
 LILYPADS = ('minecraft:lily_pad',)
+UNDERWATERPLANTS = ('minecraft:seagrass', 'minecraft:tall_seagrass',
+                    'minecraft:kelp', 'minecraft:kelp_plant',
+                    'minecraft:brain_coral_fan',
+                    'minecraft:brain_coral',
+                    'minecraft:bubble_coral_fan',
+                    'minecraft:bubble_coral',
+                    'minecraft:dead_brain_coral_fan',
+                    'minecraft:dead_brain_coral',
+                    'minecraft:dead_bubble_coral_fan',
+                    'minecraft:dead_bubble_coral',
+                    'minecraft:dead_fire_coral_fan',
+                    'minecraft:dead_fire_coral',
+                    'minecraft:dead_horn_coral_fan',
+                    'minecraft:dead_horn_coral',
+                    'minecraft:dead_tube_coral_fan',
+                    'minecraft:dead_tube_coral',
+                    'minecraft:fire_coral_fan',
+                    'minecraft:fire_coral',
+                    'minecraft:horn_coral_fan',
+                    'minecraft:horn_coral',
+                    'minecraft:tube_coral_fan',
+                    'minecraft:tube_coral'
+                    )
 TREES = (
     'minecraft:acacia_log',
     'minecraft:birch_log',
@@ -417,7 +440,7 @@ TREES = (
 FLOWERS = SHORTFLOWERS + TALLFLOWERS
 TALLPLANTS = TALLCROPS + TALLFLOWERS
 PLANTS = ('minecraft:dead_bush',) + FLOWERS + CROPS + FUNGI + WILDCROPS \
-    + TALLCROPS + GRASSES + VINES + LILYPADS
+    + TALLCROPS + GRASSES + VINES + LILYPADS + UNDERWATERPLANTS
 
 # landscape
 LIQUIDS = (
