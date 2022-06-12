@@ -437,10 +437,16 @@ TREES = (
     'minecraft:stripped_warped_stem',
     'minecraft:warped_stem'
 ) + LEAVES
+SAPLINGS = ('minecraft:oak_sapling', 'minecraft:spruce_sapling',
+            'minecraft:birch_sapling', 'minecraft:jungle_sapling',
+            'minecraft:acacia_sapling', 'minecraft:dark_oak_sapling'
+            )
 FLOWERS = SHORTFLOWERS + TALLFLOWERS
 TALLPLANTS = TALLCROPS + TALLFLOWERS
 PLANTS = ('minecraft:dead_bush',) + FLOWERS + CROPS + FUNGI + WILDCROPS \
-    + TALLCROPS + GRASSES + VINES + LILYPADS + UNDERWATERPLANTS
+    + TALLCROPS + GRASSES + VINES + LILYPADS + UNDERWATERPLANTS + SAPLINGS
+FARMLANDPLANTS = ('minecraft:dead_bush',) + FLOWERS + CROPS + FUNGI + WILDCROPS \
+    + TALLCROPS + GRASSES + SAPLINGS
 
 # landscape
 LIQUIDS = (

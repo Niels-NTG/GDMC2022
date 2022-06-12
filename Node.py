@@ -5,7 +5,7 @@ import globals
 import mapTools
 from Structure import Structure
 from StructurePrototype import StructurePrototype
-from materials import INVENTORYLOOKUP, INVENTORY, SOILS, PLANTS, TREES, AIR, UNDERWATERPLANTS
+from materials import INVENTORYLOOKUP, INVENTORY, SOILS, PLANTS, TREES, AIR, UNDERWATERPLANTS, FARMLANDPLANTS
 from worldLoader import WorldSlice
 
 
@@ -334,9 +334,13 @@ class Node:
                         newInventory
                     )
 
-            #
+            # If decoration structure has underwater plant, replace the default underwater plant with one from the list
+            # of known underwater plants.
             if decorationOptions.get('plants') == 'underwater':
                 decorationStructure.replaceMaterial('minecraft:seagrass', self.rng.choice(UNDERWATERPLANTS))
+            # If decoration structure has plants, replace the default plant with one from the list of known plants.
+            if decorationOptions.get('plants') == 'farmland':
+                decorationStructure.replaceMaterial('minecraft:red_tulip', self.rng.choice(FARMLANDPLANTS))
 
         decorationStructure.place()
 

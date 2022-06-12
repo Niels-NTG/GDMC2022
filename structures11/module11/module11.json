@@ -263,6 +263,14 @@
           }
         },
         {
+          "decorationStructure": "module11_interior_farm",
+          "facing": [0, 2],
+          "options": {
+            "plants": "farmland",
+            "chests": true
+          }
+        },
+        {
           "decorationStructure": "module11_interior_chem_lab",
           "facing": [0, 2]
         },
