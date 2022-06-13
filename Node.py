@@ -5,7 +5,8 @@ import globals
 import mapTools
 from Structure import Structure
 from StructurePrototype import StructurePrototype
-from materials import INVENTORYLOOKUP, INVENTORY, SOILS, PLANTS, TREES, AIR, UNDERWATERPLANTS, FARMLANDPLANTS
+from materials import INVENTORYLOOKUP, INVENTORY, SOILS, PLANTS, TREES, AIR, UNDERWATERPLANTS, FARMLANDPLANTS, \
+    DEEPOCEANBIOMES
 from worldLoader import WorldSlice
 
 
@@ -58,6 +59,9 @@ class Node:
             globalCropFarCorner=self.structure.getFarCornerInWorldSpace()
         )
 
+        self.localBiome = worldSlice.getBiomeAt(*self.structure.getOriginInWorldSpace())
+        self.isInDeepOcean = self.localBiome in DEEPOCEANBIOMES
+
         # Bind connectors list from structure's custom properties.
         self.connectors = []
         if 'connectors' in self.structure.customProperties:
@@ -93,6 +97,8 @@ class Node:
 
         # Calculate height difference
         elevationFromOceanFloor = (self.structure.y - self.localHeightMapOceanFloor.mean())**3
+        if self.isInDeepOcean:
+            elevationFromOceanFloor = 0
 
         materialCost = self.structure.prototype.cost
 
@@ -162,12 +168,26 @@ class Node:
                 pillarPosition[0],
                 pillarPosition[2]
             ]
+            if self.isInDeepOcean:
+                groundLevel = self.localHeightMapBaseLine[
+                    pillarPosition[0],
+                    pillarPosition[2]
+                ]
             pillarPosition = np.add(pillarPosition, [self.structure.x, 0, self.structure.z])
+
             mapTools.fill(
                 *pillarPosition,
                 pillarPosition[0], groundLevel, pillarPosition[2],
                 pillar.get('material')
             )
+
+            if self.isInDeepOcean:
+                mapTools.fill(
+                    pillarPosition[0] - 1, groundLevel - 1, pillarPosition[2] - 1,
+                    pillarPosition[0] + 1, groundLevel - 3, pillarPosition[2] + 1,
+                    'minecraft:wet_sponge'
+                )
+
             # If pillar has a facing direction for a ladder defined, put a ladder on this face of the pillar.
             if pillar.get('ladder') is not None:
                 ladderRotation = (self.structure.rotation + pillar.get('ladder')) % 4
@@ -240,12 +260,25 @@ class Node:
                         pillarPosition[0],
                         pillarPosition[2]
                     ]
+                    if self.isInDeepOcean:
+                        groundLevel = self.localHeightMapBaseLine[
+                            pillarPosition[0],
+                            pillarPosition[2]
+                        ]
                     pillarPosition = np.add(pillarPosition, [self.structure.x, 0, self.structure.z])
+
                     mapTools.fill(
                         *pillarPosition,
                         pillarPosition[0], groundLevel, pillarPosition[2],
                         pillar.get('material')
                     )
+
+                    if self.isInDeepOcean:
+                        mapTools.fill(
+                            pillarPosition[0] - 1, groundLevel - 1, pillarPosition[2] - 1,
+                            pillarPosition[0] + 1, groundLevel - 3, pillarPosition[2] + 1,
+                            'minecraft:wet_sponge'
+                        )
 
                     if pillar.get('ladder') is not None:
                         ladderRotation = (decorationStructure.rotation + pillar.get('ladder')) % 4

@@ -414,26 +414,26 @@ UNDERWATERPLANTS = ('minecraft:seagrass', 'minecraft:tall_seagrass',
                     'minecraft:tube_coral'
                     )
 TREES = (
-    'minecraft:acacia_log',
-    'minecraft:birch_log',
-    'minecraft:brown_mushroom_block',
-    'minecraft:crimson_stem',
-    'minecraft:dark_oak_log',
-    'minecraft:jungle_log',
-    'minecraft:mushroom_stem',
-    'minecraft:oak_log',
-    'minecraft:red_mushroom_block',
-    'minecraft:spruce_log',
-    'minecraft:stripped_acacia_log',
-    'minecraft:stripped_birch_log',
-    'minecraft:stripped_crimson_stem',
-    'minecraft:stripped_dark_oak_log',
-    'minecraft:stripped_jungle_log',
-    'minecraft:stripped_oak_log',
-    'minecraft:stripped_spruce_log',
-    'minecraft:stripped_warped_stem',
-    'minecraft:warped_stem'
-) + LEAVES
+            'minecraft:acacia_log',
+            'minecraft:birch_log',
+            'minecraft:brown_mushroom_block',
+            'minecraft:crimson_stem',
+            'minecraft:dark_oak_log',
+            'minecraft:jungle_log',
+            'minecraft:mushroom_stem',
+            'minecraft:oak_log',
+            'minecraft:red_mushroom_block',
+            'minecraft:spruce_log',
+            'minecraft:stripped_acacia_log',
+            'minecraft:stripped_birch_log',
+            'minecraft:stripped_crimson_stem',
+            'minecraft:stripped_dark_oak_log',
+            'minecraft:stripped_jungle_log',
+            'minecraft:stripped_oak_log',
+            'minecraft:stripped_spruce_log',
+            'minecraft:stripped_warped_stem',
+            'minecraft:warped_stem'
+        ) + LEAVES
 SAPLINGS = ('minecraft:oak_sapling', 'minecraft:spruce_sapling',
             'minecraft:birch_sapling', 'minecraft:jungle_sapling',
             'minecraft:acacia_sapling', 'minecraft:dark_oak_sapling'
@@ -441,9 +441,9 @@ SAPLINGS = ('minecraft:oak_sapling', 'minecraft:spruce_sapling',
 FLOWERS = SHORTFLOWERS + TALLFLOWERS
 TALLPLANTS = TALLCROPS + TALLFLOWERS
 PLANTS = ('minecraft:dead_bush',) + FLOWERS + CROPS + FUNGI + WILDCROPS \
-    + TALLCROPS + GRASSES + VINES + LILYPADS + UNDERWATERPLANTS + SAPLINGS
+         + TALLCROPS + GRASSES + VINES + LILYPADS + UNDERWATERPLANTS + SAPLINGS
 FARMLANDPLANTS = ('minecraft:dead_bush',) + FLOWERS + CROPS + FUNGI + WILDCROPS \
-    + TALLCROPS + GRASSES + SAPLINGS
+                 + TALLCROPS + GRASSES + SAPLINGS
 
 # landscape
 LIQUIDS = (
@@ -722,12 +722,11 @@ INVENTORY = ('minecraft:barrel', 'minecraft:chest', 'minecraft:trapped_chest',
              'minecraft:dispenser', 'minecraft:dropper', 'minecraft:hopper',
              'minecraft:brewing_stand')
 
-
 ARTIFICIAL = ('minecraft:grass_path', 'minecraft:cobblestone') \
-    + STAIRS + SLABS + FENCES + WALLS + GLASS + LIGHTSOURCES \
-    + WIRING + RAILS + SWITCHES + PRESSUREPLATES + DOORS + TRAPDOORS + GATES \
-    + HEADS + SIGNS + ANVILS + BEDS + FURNACES + SHULKERBOXES + WOOLS + CARPETS \
-    + INVENTORY
+             + STAIRS + SLABS + FENCES + WALLS + GLASS + LIGHTSOURCES \
+             + WIRING + RAILS + SWITCHES + PRESSUREPLATES + DOORS + TRAPDOORS + GATES \
+             + HEADS + SIGNS + ANVILS + BEDS + FURNACES + SHULKERBOXES + WOOLS + CARPETS \
+             + INVENTORY
 
 # ================================================= grouped by obtrusiveness
 
@@ -743,7 +742,7 @@ FILTERING = ('minecraft:water', 'minecraft:bubble_column',
              'minecraft:beacon',
              'minecraft:end_gateway',
              'minecraft:chorus_plant', 'minecraft:chorus_flower') \
-    + LEAVES + SHULKERBOXES
+            + LEAVES + SHULKERBOXES
 
 # can be seen through easily
 UNOBTRUSIVE = ('minecraft:ladder',
@@ -756,13 +755,13 @@ UNOBTRUSIVE = ('minecraft:ladder',
                'minecraft:lily_pad',
                'minecraft:scaffolding',
                'minecraft:snow') \
-    + GLASS + RAILS + WIRING + SWITCHES + TORCHES + SIGNS
+              + GLASS + RAILS + WIRING + SWITCHES + TORCHES + SIGNS
 
 # can be seen through moderately
 OBTRUSIVE = ('minecraft:bell', 'minecraft:brewing_stand', 'minecraft:cake',
              'minecraft:campfire', 'minecraft:dragon_egg',
              'minecraft:flower_pot', 'minecraft:lectern', 'turtle_egg') \
-    + ANVILS + HEADS + PLANTS + BEDS + FENCES + GATES + SLABS
+            + ANVILS + HEADS + PLANTS + BEDS + FENCES + GATES + SLABS
 
 TRANSPARENT = INVISIBLE + FILTERING + UNOBTRUSIVE + OBTRUSIVE
 
@@ -784,7 +783,7 @@ MAPTRANSPARENT = ('minecraft:redstone_lamp',
                   'minecraft:nether_portal',
                   'minecraft:iron_bars',
                   'minecraft:chain') \
-    + INVISIBLE + WIRING + RAILS + SWITCHES + HEADS + TORCHES
+                 + INVISIBLE + WIRING + RAILS + SWITCHES + HEADS + TORCHES
 
 # base map colours
 # WARNING: all non-transparent blocks are listed individually here again
@@ -1210,8 +1209,8 @@ PALETTE = {0x7fb238: ('minecraft:grass_block', 'minecraft:slime_block'),
                       'minecraft:dark_prismarine_slab',
                       'minecraft:dark_prismarine_stairs',
                       'minecraft:conduit'),
-           0x4a80ff: ('minecraft:lapis_block', ),
-           0x00d93a: ('minecraft:emerald_block', ),
+           0x4a80ff: ('minecraft:lapis_block',),
+           0x00d93a: ('minecraft:emerald_block',),
            0x815631: ('minecraft:podzol', 'minecraft:spruce_planks',
                       'minecraft:stripped_spruce_log', 'minecraft:spruce_wood',
                       'minecraft:stripped_spruce_wood',
@@ -1240,24 +1239,24 @@ PALETTE = {0x7fb238: ('minecraft:grass_block', 'minecraft:slime_block'),
                       'minecraft:crimson_roots', 'minecraft:crimson_door',
                       'minecraft:crimson_fungus',
                       'minecraft:weeping_vines'),
-           0xd1b1a1: ('minecraft:white_terracotta', ),
-           0x9f5224: ('minecraft:orange_terracotta', ),
-           0x95576c: ('minecraft:magenta_terracotta', ),
-           0x706c8a: ('minecraft:light_blue_terracotta', ),
-           0xba8524: ('minecraft:yellow_terracotta', ),
-           0x677535: ('minecraft:lime_terracotta', ),
-           0xa04d4e: ('minecraft:pink_terracotta', ),
-           0x392923: ('minecraft:gray_terracotta', ),
-           0x876b62: ('minecraft:light_gray_terracotta', ),
-           0x575c5c: ('minecraft:cyan_terracotta', ),
+           0xd1b1a1: ('minecraft:white_terracotta',),
+           0x9f5224: ('minecraft:orange_terracotta',),
+           0x95576c: ('minecraft:magenta_terracotta',),
+           0x706c8a: ('minecraft:light_blue_terracotta',),
+           0xba8524: ('minecraft:yellow_terracotta',),
+           0x677535: ('minecraft:lime_terracotta',),
+           0xa04d4e: ('minecraft:pink_terracotta',),
+           0x392923: ('minecraft:gray_terracotta',),
+           0x876b62: ('minecraft:light_gray_terracotta',),
+           0x575c5c: ('minecraft:cyan_terracotta',),
            0x7a4958: ('minecraft:purple_terracotta',
                       'minecraft:purple_shulker_box'),
-           0x4c3e5c: ('minecraft:blue_terracotta', ),
-           0x4c3223: ('minecraft:brown_terracotta', ),
-           0x4c522a: ('minecraft:green_terracotta', ),
-           0x8e3c2e: ('minecraft:red_terracotta', ),
-           0x251610: ('minecraft:black_terracotta', ),
-           0xbd3031: ('minecraft:crimson_nylium', ),
+           0x4c3e5c: ('minecraft:blue_terracotta',),
+           0x4c3223: ('minecraft:brown_terracotta',),
+           0x4c522a: ('minecraft:green_terracotta',),
+           0x8e3c2e: ('minecraft:red_terracotta',),
+           0x251610: ('minecraft:black_terracotta',),
+           0xbd3031: ('minecraft:crimson_nylium',),
            0x943f61: ('minecraft:crimson_fence',
                       'minecraft:crimson_fence_gate',
                       'minecraft:crimson_planks',
@@ -1269,7 +1268,7 @@ PALETTE = {0x7fb238: ('minecraft:grass_block', 'minecraft:slime_block'),
                       'minecraft:crimson_trapdoor'),
            0x5c191d: ('minecraft:crimson_hyphae',
                       'minecraft:stripped_crimson_hyphae'),
-           0x167e86: ('minecraft:warped_nylium', ),
+           0x167e86: ('minecraft:warped_nylium',),
            0x3a8e8c: ('minecraft:warped_fence', 'minecraft:warped_fence_gate',
                       'minecraft:warped_planks',
                       'minecraft:warped_pressure_plate',
@@ -1280,12 +1279,11 @@ PALETTE = {0x7fb238: ('minecraft:grass_block', 'minecraft:slime_block'),
                       'minecraft:warped_trapdoor'),
            0x562c3e: ('minecraft:warped_hyphae',
                       'minecraft:stripped_warped_hyphae'),
-           0x14b485: ('minecraft:warped_wart_block', )}
+           0x14b485: ('minecraft:warped_wart_block',)}
 PALETTELOOKUP = {}
 for hexCode, blocks in PALETTE.items():
     for block in blocks:
         PALETTELOOKUP[block] = hexCode
-
 
 # ========================================================= biome-related
 
@@ -1369,6 +1367,16 @@ BIOMES = {0: "ocean",
           172: "warped_forest",
           173: "basalt_deltas"
           }
+
+DEEPOCEANBIOMES = ('deep_warm_ocean',
+                   'deep_lukewarm_ocean',
+                   'deep_cold_ocean',
+                   'deep_ocean',
+                   'warm_ocean',
+                   'lukewarm_ocean',
+                   'cold_ocean',
+                   'ocean'
+                   )
 
 # ========================================================= technical values
 

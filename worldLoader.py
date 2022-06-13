@@ -28,7 +28,7 @@ class CachedSection:
     # __repr__ displays the class well enough so __str__ is omitted
     def __repr__(self):
         return f"CachedSection({repr(self.palette)}, " \
-            f"{repr(self.blockStatesBitArray)})"
+               f"{repr(self.blockStatesBitArray)})"
 
 
 class WorldSlice:
@@ -135,7 +135,7 @@ class WorldSlice:
         palette = cachedSection.palette
 
         blockIndex = (y % 16) * 16 * 16 + \
-            (z % 16) * 16 + x % 16
+                     (z % 16) * 16 + x % 16
         return palette[bitarray.getAt(blockIndex)]
 
     def getBlockAt(self, x, y, z):
@@ -152,13 +152,18 @@ class WorldSlice:
         Due to the noise around chunk borders,
             there is an inacurracy of +/-2 blocks.
         """
+        x = x - self.rect[0]
+        z = z - self.rect[1]
         chunkID = x // 16 + z // 16 * self.chunkRect[2]
-        data = self.nbtfile['Chunks'][chunkID]['Level']['Biomes']
-        x = (x % 16) // 4
-        z = (z % 16) // 4
-        y = y // 4
-        index = x + 4 * z + 16 * y
-        return BIOMES[data[index]]
+        try:
+            data = self.nbtfile['Chunks'][chunkID]['Level']['Biomes']
+            x = (x % 16) // 4
+            z = (z % 16) // 4
+            y = y // 4
+            index = x + 4 * z + 16 * y
+            return BIOMES[data[index]]
+        except:
+            return ''
 
     def getBiomesNear(self, x, y, z):
         """**Return a list of biomes in the same chunk**."""
