@@ -16,7 +16,7 @@ class SettlementBuilder:
         # /setbuildarea ~ ~ ~ ~32 ~12 ~32
         self.buildArea, worldSlice = mapTools.getBuildArea()
 
-        globals.constructionBudget = 1000
+        globals.constructionBudget = 4000
 
         primaryColor = self.rng.choice(('orange', 'magenta', 'light_blue', 'yellow', 'lime', 'pink',
                                         'cyan', 'purple', 'blue', 'green', 'red'))
@@ -52,7 +52,7 @@ class SettlementBuilder:
         # Map of structures built in the build area.
         mapOfStructures = np.full(shape=self.baseLineHeightMap.shape, fill_value=0)
 
-        startingStructure: StructurePrototype = globals.structurePrototypes['module11']
+        startingStructure: StructurePrototype = globals.structurePrototypes['hub7']
 
         maxPlacementAttempts = 100
         placementTryCount = 0

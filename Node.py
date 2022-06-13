@@ -145,14 +145,14 @@ class Node:
             if step is None:
                 continue
             if 'pillars' in step:
-                self._placePillars(step['pillars'])
+                self._placePillars(step['pillars'], self.structure.rotation)
                 continue
             if 'decoration' in step:
                 self._placeDecoration(step['decoration'], step['decorationStructure'])
                 continue
 
     # Place pillars post-processing function.
-    def _placePillars(self, pillars):
+    def _placePillars(self, pillars, rotation):
         nodePivot = self.structure.getHorizontalCenter()
         for pillar in pillars:
             pillarPosition = mapTools.rotatePointAroundOrigin(
@@ -162,7 +162,7 @@ class Node:
                     self.structure.y - 1,
                     pillar['pos'][1]
                 ],
-                self.structure.rotation
+                rotation
             )
             groundLevel = self.localHeightMapOceanFloor[
                 pillarPosition[0],
@@ -190,7 +190,7 @@ class Node:
 
             # If pillar has a facing direction for a ladder defined, put a ladder on this face of the pillar.
             if pillar.get('ladder') is not None:
-                ladderRotation = (self.structure.rotation + pillar.get('ladder')) % 4
+                ladderRotation = (rotation + pillar.get('ladder')) % 4
                 self._placeLadder(pillarPosition, ladderRotation, groundLevel)
 
     def _placeLadder(self, pillarPosition, ladderRotation, groundLevel):
@@ -245,44 +245,7 @@ class Node:
         decorationOptions = decoration.get('options')
         if decorationOptions:
             if isinstance(decorationOptions.get('pillars'), list):
-                nodePivot = self.structure.getHorizontalCenter()
-                for pillar in decorationOptions.get('pillars'):
-                    pillarPosition = mapTools.rotatePointAroundOrigin(
-                        nodePivot,
-                        [
-                            pillar['pos'][0],
-                            self.structure.y - 1,
-                            pillar['pos'][1]
-                        ],
-                        decorationStructure.rotation
-                    )
-                    groundLevel = self.localHeightMapOceanFloor[
-                        pillarPosition[0],
-                        pillarPosition[2]
-                    ]
-                    if self.isInDeepOcean:
-                        groundLevel = self.localHeightMapBaseLine[
-                            pillarPosition[0],
-                            pillarPosition[2]
-                        ]
-                    pillarPosition = np.add(pillarPosition, [self.structure.x, 0, self.structure.z])
-
-                    mapTools.fill(
-                        *pillarPosition,
-                        pillarPosition[0], groundLevel, pillarPosition[2],
-                        pillar.get('material')
-                    )
-
-                    if self.isInDeepOcean:
-                        mapTools.fill(
-                            pillarPosition[0] - 1, groundLevel - 1, pillarPosition[2] - 1,
-                            pillarPosition[0] + 1, groundLevel - 3, pillarPosition[2] + 1,
-                            'minecraft:wet_sponge'
-                        )
-
-                    if pillar.get('ladder') is not None:
-                        ladderRotation = (decorationStructure.rotation + pillar.get('ladder')) % 4
-                        self._placeLadder(pillarPosition, ladderRotation, groundLevel)
+                self._placePillars(decorationOptions.get('pillars'), decorationStructure.rotation)
 
             # For decoration marked to have chest (or other inventory blocks)
             if decorationOptions.get('chests') is True:
