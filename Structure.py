@@ -3,6 +3,7 @@ import numpy as np
 from StructurePrototype import StructurePrototype
 import interface
 import mapTools
+import globals
 
 # With this class you can load in an NBT-encoded Minecraft Structure file
 # (https://minecraft.fandom.com/wiki/Structure_Block_file_format) and place them in the world.
@@ -46,8 +47,7 @@ class Structure:
         self._applyCustomProperties()
         self.groundClearance = structurePrototype.groundClearance
 
-        # TODO implement material replacements
-        self.materialReplacements = dict()
+        self.materialReplacements = copy.copy(globals.globalMaterialReplacements)
 
     def setPosition(self, x=None, y=None, z=None):
         if x is not None:

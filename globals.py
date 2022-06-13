@@ -4,6 +4,7 @@ import re
 
 global structurePrototypes
 global constructionBudget
+global globalMaterialReplacements
 
 
 def initialize():
@@ -11,6 +12,8 @@ def initialize():
     structurePrototypes = dict()
     loadStructures()
     global constructionBudget
+    global globalMaterialReplacements
+    globalMaterialReplacements = dict()
 
 
 def loadStructures():

@@ -18,6 +18,12 @@ class SettlementBuilder:
 
         globals.constructionBudget = 1000
 
+        primaryColor = self.rng.choice(('orange', 'magenta', 'light_blue', 'yellow', 'lime', 'pink',
+                                        'cyan', 'purple', 'blue', 'green', 'red'))
+        globals.globalMaterialReplacements = dict({
+            'minecraft:orange_concrete': 'minecraft:{}_concrete'.format(primaryColor)
+        })
+
         # # Height map of the build area.
         self.baseLineHeightMap, self.oceanFloorHeightMap = mapTools.calcHeightMap(worldSlice)
 
@@ -47,7 +53,7 @@ class SettlementBuilder:
 
         startingStructure: StructurePrototype = globals.structurePrototypes['module11']
 
-        maxPlacementAttempts = 40
+        maxPlacementAttempts = 100
         placementTryCount = 0
         while placementTryCount < maxPlacementAttempts:
 
