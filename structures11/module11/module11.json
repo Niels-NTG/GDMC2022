@@ -274,6 +274,10 @@
           "decorationStructure": "module11_interior_chem_lab",
           "facing": [0, 2]
         },
+        {
+          "decorationStructure": "module11_interior_bedroom",
+          "facing": [0, 2]
+        },
         null
       ]
     }
