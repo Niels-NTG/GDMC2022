@@ -78,6 +78,9 @@ class StructurePrototype:
             if blockMaterial in ARTIFICIAL:
                 self.cost += 0.1
                 continue
+            if blockMaterial == 'minecraft:ender_chest' or blockMaterial == 'minecraft:jukebox':
+                self.cost += 4
+                continue
             self.cost += 1
 
     def getBlockAt(self, x, y, z):
