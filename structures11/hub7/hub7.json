@@ -61,6 +61,23 @@
           "material": "minecraft:quartz_pillar"
         }
       ]
+    },
+    {
+      "decorations": [
+        {
+          "decorationStructure": "hub7_interior_crafting_table",
+          "facing": [0, 1, 2, 3]
+        },
+        {
+          "decorationStructure": "hub7_interior_map_table",
+          "facing": [0, 1, 2, 3]
+        },
+        {
+          "decorationStructure": "hub7_interior_music",
+          "facing": [0, 1, 2, 3]
+        },
+        null
+      ]
     }
   ]
 }
