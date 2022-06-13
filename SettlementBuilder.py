@@ -21,7 +21,8 @@ class SettlementBuilder:
         primaryColor = self.rng.choice(('orange', 'magenta', 'light_blue', 'yellow', 'lime', 'pink',
                                         'cyan', 'purple', 'blue', 'green', 'red'))
         globals.globalMaterialReplacements = dict({
-            'minecraft:orange_concrete': 'minecraft:{}_concrete'.format(primaryColor)
+            'minecraft:orange_concrete': 'minecraft:{}_concrete'.format(primaryColor),
+            'minecraft:orange_bed': 'minecraft:{}_bed'.format(primaryColor)
         })
 
         # # Height map of the build area.
