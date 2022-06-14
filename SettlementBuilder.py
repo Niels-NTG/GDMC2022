@@ -22,7 +22,8 @@ class SettlementBuilder:
                                         'cyan', 'purple', 'blue', 'green', 'red'))
         globals.globalMaterialReplacements = dict({
             'minecraft:orange_concrete': 'minecraft:{}_concrete'.format(primaryColor),
-            'minecraft:orange_bed': 'minecraft:{}_bed'.format(primaryColor)
+            'minecraft:orange_bed': 'minecraft:{}_bed'.format(primaryColor),
+            'minecraft:orange_carpet': 'minecraft:{}_carpet'.format(primaryColor)
         })
 
         # # Height map of the build area.
