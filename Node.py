@@ -298,12 +298,22 @@ class Node:
                             'x': self.rng.integers(inventoryDimensions[0]),
                             'y': self.rng.integers(inventoryDimensions[1]),
                             'material': sampleMaterial,
-                            'amount': self.rng.integers(1, 9)
+                            'amount': self.rng.integers(1, 5)
                         })
 
                         if self.rng.random() < 0.8:
                             continue
                         randomCodes = ''.join(self.rng.choice(list(string.hexdigits), size=10))
+                        author = 'The members of the {} research team'.format(self.rng.choice([
+                            'exogeology',
+                            'exobiology',
+                            'exobiotanica',
+                            'exo-ecology',
+                            'exo-seismology',
+                            'exo-planetary',
+                            'exo macro-biology'
+                            'exo archaeology'
+                        ]))
                         bookText = \
                             'SAMPLE REPORT §4{}§r\n'.format(randomCodes) + \
                             'date: §dSOL{}/EPOC{}:T+{}{}§r\n'.format(
@@ -312,30 +322,20 @@ class Node:
                                 self.rng.integers(20, 28),
                                 self.rng.integers(0, 61),
                             ) + \
-                            '§5DURING EXPEDITION {}§r\n'.format(''.join(self.rng.choice(list(string.hexdigits), size=4))) + \
-                            'SUBJECT: §a SAMPLE OF {}\n'.format(sampleMaterial.replace('minecraft:', '')) + \
-                            '\n' + \
-                            'INTRODUCTION\n' + \
-                            '§k' + ''.join(self.rng.choice(list(string.hexdigits), size=self.rng.integers(1000))) + ' §r\n' + \
-                            'RESULTS and DISCUSSION\n' + \
-                            '§k' + ''.join(self.rng.choice(list(string.hexdigits), size=self.rng.integers(1000))) + ' §r\n' + \
-                            'CONCLUSION\n' + \
-                            '§k' + ''.join(self.rng.choice(list(string.hexdigits), size=self.rng.integers(1000)))
+                            author + '§2 PART OF  EXPEDITION {}§r\n'.format(''.join(self.rng.choice(list(string.hexdigits), size=3))) + \
+                            'SUBJECT: §a SAMPLE OF {}§r\n'.format(sampleMaterial.replace('minecraft:', '')) + \
+                            '§rINTRODUCTION\n' + \
+                            '§k' + ''.join(self.rng.choice(list(string.hexdigits), size=self.rng.integers(100, 1000))) + ' §r\f' + \
+                            '§rRESULTS and DISCUSSION\n' + \
+                            '§k' + ''.join(self.rng.choice(list(string.hexdigits), size=self.rng.integers(100, 1000))) + ' §r\f' + \
+                            '§rCONCLUSION\n' + \
+                            '§k' + ''.join(self.rng.choice(list(string.hexdigits), size=self.rng.integers(100, 1000))) + '\f'
 
                         bookData = mapTools.writeBook(
                             text=bookText,
                             title='$4 SAMPLE REPORT {}'.format(randomCodes),
-                            author='The members of the {} research team'.format(self.rng.choice([
-                                    'exogeology',
-                                    'exobiology',
-                                    'exobiotanica',
-                                    'exo-ecology',
-                                    'exo-seismology',
-                                    'exo-planetary',
-                                    'exo macro-biology'
-                                    'exo archaeology'
-                                ])
-                            )
+                            author=author,
+                            generation=self.rng.integers(3)
                         )
                         newInventory.append({
                             'x': self.rng.integers(inventoryDimensions[0]),

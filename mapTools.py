@@ -221,7 +221,8 @@ def createBookForLectern(
 def writeBook(
         text='ExampleText',
         title='Chronicle',
-        author='OBK-1'
+        author='OBK-1',
+        generation=0
 ):
     r"""**Return NBT data for a correctly formatted book**.
     The following special characters are used for formatting the book:
@@ -262,7 +263,8 @@ def writeBook(
 
     bookData = dict({
         'title': title,
-        'author': author
+        'author': author,
+        'generation': generation
     })
     pages = []
 
