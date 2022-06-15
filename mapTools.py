@@ -59,7 +59,7 @@ def calcHeightMap(worldSlice):
                     break
     heightMapOceanFloor = np.array(np.minimum(worldSlice.heightmaps['OCEAN_FLOOR'], heightMapOceanFloor))
 
-    return heightMapNoTrees, heightMapOceanFloor
+    return heightMapNoTrees, heightMapOceanFloor, np.array(worldSlice.heightmaps['WORLD_SURFACE'])
 
 
 def getMostFrequentHeight(heightMap):
@@ -97,24 +97,11 @@ def fill(fromX, fromY, fromZ, toX, toY, toZ, material, fillMode="replace"):
     )
 
 
-# Create solid shape filling the given area. Non-air blocks are unaffected.
-def keepFill(fromX, fromY, fromZ, toX, toY, toZ, material):
-    return fill(fromX, fromY, fromZ, toX, toY, toZ, material, fillMode="keep")
-
-
-# Create hollow shape. Blocks inside the area are replaced with air.
-def hollowFill(fromX, fromY, fromZ, toX, toY, toZ, material):
-    return fill(fromX, fromY, fromZ, toX, toY, toZ, material, fillMode="hollow")
-
-
-# Create hollow shape. Blocks inside the area are unaffected.
-def outlineFill(fromX, fromY, fromZ, toX, toY, toZ, material):
-    return fill(fromX, fromY, fromZ, toX, toY, toZ, material, fillMode="outline")
-
-
-# Replace all blocks in the given area with air.
-def destroy(fromX, fromY, fromZ, toX, toY, toZ):
-    return fill(fromX, fromY, fromZ, toX, toY, toZ, "minecraft:air", fillMode="destroy")
+# Replace one material with another
+def replace(fromX, fromY, fromZ, toX, toY, toZ, material='minecraft:air', materialToReplace='minecraft:structure_void'):
+    return interface.runCommand(
+        "fill %d %d %d %d %d %d %s replace %s" % (fromX, fromY, fromZ, toX, toY, toZ, material, materialToReplace)
+    )
 
 
 def placePerimeter(fromX, fromZ, sizeX, sizeZ, heightMap, material):

@@ -16,7 +16,7 @@ class SettlementBuilder:
         # /setbuildarea ~ ~ ~ ~32 ~12 ~32
         self.buildArea, worldSlice = mapTools.getBuildArea()
 
-        globals.constructionBudget = 4000
+        globals.constructionBudget = 3400
 
         primaryColor = self.rng.choice(('orange', 'magenta', 'light_blue', 'yellow', 'lime', 'pink',
                                         'cyan', 'purple', 'blue', 'green', 'red'))
@@ -27,7 +27,7 @@ class SettlementBuilder:
         })
 
         # # Height map of the build area.
-        self.baseLineHeightMap, self.oceanFloorHeightMap = mapTools.calcHeightMap(worldSlice)
+        self.baseLineHeightMap, self.oceanFloorHeightMap, worldSurfaceHeightMap = mapTools.calcHeightMap(worldSlice)
 
         # DEBUG
         # mapTools.fill(
