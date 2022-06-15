@@ -139,6 +139,13 @@ class Node:
             localOrigin[1]:localFarCorner[1]
         ] = 1
 
+    def _doPreProcessing(self):
+        # Clear out trees
+        fromPos = np.add(self.structure.getOriginInWorldSpace(), 2)
+        toPos = np.add(self.structure.getFarCornerInWorldSpace(), [2, 20, 2])
+        for treeMaterial in TREES:
+            mapTools.replace(*fromPos, *toPos, materialToReplace=treeMaterial)
+
     # Run function for each post-processing step.
     def _doPostProcessing(self):
         for step in self.chosenPostProcessingSteps:
@@ -367,6 +374,8 @@ class Node:
         return self.rng.choice(list(placementScores), p=weights)
 
     def place(self, isStartingNode=False):
+
+        self._doPreProcessing()
 
         self.structure.place()
         self._updateMapOfStructures(self.structure)
