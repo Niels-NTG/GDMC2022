@@ -383,6 +383,7 @@ class Node:
         self._doPostProcessing()
 
         selfRotation = self.structure.rotation
+        nextNodes = []
         for connection in self.connectors:
 
             connectionRotation = (connection.get('facing') + selfRotation) % 4
@@ -443,4 +444,6 @@ class Node:
                 print('remaining construction budget: %s after placing %s (cost: %s)' % (
                     globals.constructionBudget, nextNodeStructureName, placementScores[nextNodeStructureName]
                 ))
-                nextNode.place()
+                nextNodes.append(nextNode)
+        for nextNode in nextNodes:
+            nextNode.place()
