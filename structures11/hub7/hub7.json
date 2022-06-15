@@ -76,10 +76,6 @@
           "decorationStructure": "hub7_interior_music",
           "facing": [0, 1, 2, 3]
         },
-        {
-          "decorationStructure": "hub7_interior_ender_chest",
-          "facing": [0, 1, 2, 3]
-        },
         null
       ]
     }
