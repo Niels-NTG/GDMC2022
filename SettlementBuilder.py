@@ -57,6 +57,7 @@ class SettlementBuilder:
 
         maxPlacementAttempts = 100
         placementTryCount = 0
+        firstPlacement = None
         while placementTryCount < maxPlacementAttempts:
 
             startingPos = self.getStartPosition(startingStructure)
@@ -81,9 +82,34 @@ class SettlementBuilder:
             )
             if startingNode.isPlacable():
                 startingNode.place(isStartingNode=True)
+                firstPlacement = startingNode
                 break
             else:
                 placementTryCount = placementTryCount + 1
+
+        if firstPlacement:
+            firstPlacementLocation = firstPlacement.structure.getOriginInWorldSpace()
+            print('structure has been generated around {} {} {}'.format(*firstPlacementLocation))
+
+            buildAreaHorizontalCenter = [
+                self.buildArea[0] + (self.buildArea[2] // 2),
+                self.buildArea[1] + (self.buildArea[3] // 2)
+            ]
+            centerY = self.baseLineHeightMap[self.buildArea[2] // 2, self.buildArea[3] // 2]
+            mapTools.setBlock(
+                buildAreaHorizontalCenter[0],
+                centerY,
+                buildAreaHorizontalCenter[1],
+                'minecraft:birch_sign',
+                properties=dict({
+                    'rotation': str(self.rng.integers(16))
+                }),
+                blockData=dict({
+                    'Text1': '"Settlement has"',
+                    'Text2': '"been generated at"',
+                    'Text3': '"{} {} {}"'.format(*firstPlacementLocation)
+                })
+            )
 
     def getStartPosition(self, startingStructure):
         # Pick starting position somewhere in the middle of the build area
