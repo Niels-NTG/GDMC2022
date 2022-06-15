@@ -300,26 +300,42 @@ class Node:
                             'material': sampleMaterial,
                             'amount': self.rng.integers(1, 9)
                         })
-                        # TODO add paper with science sample description
+
                         if self.rng.random() < 0.8:
                             continue
                         randomCodes = ''.join(self.rng.choice(list(string.hexdigits), size=10))
                         bookText = \
                             'SAMPLE REPORT §4{}§r\n'.format(randomCodes) + \
-                            'date: §d{}/{}/{}:{}§r\n'.format(
+                            'date: §dSOL{}/EPOC{}:T+{}{}§r\n'.format(
                                 self.rng.integers(1, 9),
                                 self.rng.integers(1, 11),
-                                # TODO dynasty year
-                                # TODO convert local time to alien planet time (see Mars rover time logging)
                                 self.rng.integers(20, 28),
                                 self.rng.integers(0, 61),
-                                self.rng.integers(0, 25)
                             ) + \
-                            'SUBJECT: §a SOIL SAMPLE OF {}'.format(sampleMaterial)
+                            '§5DURING EXPEDITION {}§r\n'.format(''.join(self.rng.choice(list(string.hexdigits), size=4))) + \
+                            'SUBJECT: §a SAMPLE OF {}\n'.format(sampleMaterial.replace('minecraft:', '')) + \
+                            '\n' + \
+                            'INTRODUCTION\n' + \
+                            '§k' + ''.join(self.rng.choice(list(string.hexdigits), size=self.rng.integers(1000))) + ' §r\n' + \
+                            'RESULTS and DISCUSSION\n' + \
+                            '§k' + ''.join(self.rng.choice(list(string.hexdigits), size=self.rng.integers(1000))) + ' §r\n' + \
+                            'CONCLUSION\n' + \
+                            '§k' + ''.join(self.rng.choice(list(string.hexdigits), size=self.rng.integers(1000)))
+
                         bookData = mapTools.writeBook(
                             text=bookText,
                             title='$4 SAMPLE REPORT {}'.format(randomCodes),
-                            author='Me'
+                            author='The members of the {} research team'.format(self.rng.choice([
+                                    'exogeology',
+                                    'exobiology',
+                                    'exobiotanica',
+                                    'exo-ecology',
+                                    'exo-seismology',
+                                    'exo-planetary',
+                                    'exo macro-biology'
+                                    'exo archaeology'
+                                ])
+                            )
                         )
                         newInventory.append({
                             'x': self.rng.integers(inventoryDimensions[0]),
@@ -329,7 +345,17 @@ class Node:
                             'tag': bookData
                         })
 
-                        # TODO Add tools and scientific instruments to chests
+                        if self.rng.random() < 0.1:
+                            continue
+                        newInventory.append({
+                            'x': self.rng.integers(inventoryDimensions[0]),
+                            'y': self.rng.integers(inventoryDimensions[1]),
+                            'material': 'minecraft:{}'.format(self.rng.choice([
+                                'iron_pickaxe', 'shears', 'fishing_rod', 'iron_axe', 'iron_hoe',
+                                'clock', 'flint_and_steel', 'compass', 'map'
+                            ])),
+                            'amount': 1
+                        })
 
                     mapTools.setInventoryBlockContents(
                         block,
