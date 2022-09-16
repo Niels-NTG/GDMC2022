@@ -1,4 +1,4 @@
-import re
+from pathlib import Path
 import numpy as np
 from nbt import nbt
 import os
@@ -13,12 +13,12 @@ from materials import AIR, STAIRS, SLABS, ARTIFICIAL, LIQUIDS, PLANTS, TREES
 class StructurePrototype:
 
     def __init__(self,
-                 structureFilePath: str,
+                 structureFilePath: Path,
                  structureName: str
                  ):
         self.structureName = structureName
 
-        self.nbt = nbt.NBTFile(structureFilePath + ".nbt", "rb")
+        self.nbt = nbt.NBTFile(structureFilePath.with_suffix('.nbt'), 'rb')
 
         # Structure which gets inserted as a transition from this structure to the next.
         self.transitionStructures = {}
@@ -30,17 +30,18 @@ class StructurePrototype:
         self.groundClearance = 1
 
         self.customProperties = {}
-        if os.path.isfile(structureFilePath + '.json'):
-            with open(structureFilePath + '.json') as JSONfile:
+        customPropertiesFilePath = structureFilePath.with_suffix('.json')
+        if os.path.isfile(customPropertiesFilePath):
+            with open(customPropertiesFilePath) as JSONfile:
                 self.customProperties = json.load(JSONfile)
 
-                rootDir = re.sub(r'^(.+/).+$', r'\1', structureFilePath)
+                rootDir = structureFilePath.parent
 
                 if 'connectors' in self.customProperties:
                     # Scan for and then load in structures that serve to connect this structure to another.
                     for connectorProps in self.customProperties['connectors']:
                         if connectorProps.get('transitionStructure'):
-                            transitionStructureFilePath = rootDir + connectorProps['transitionStructure']
+                            transitionStructureFilePath = rootDir / connectorProps['transitionStructure']
                             if connectorProps['transitionStructure'] not in self.transitionStructures:
                                 self.transitionStructures[connectorProps['transitionStructure']] = StructurePrototype(
                                     structureFilePath=transitionStructureFilePath,
@@ -57,7 +58,7 @@ class StructurePrototype:
                             if decoration is not None:
                                 if 'decorationStructure' in decoration:
                                     if decoration['decorationStructure'] not in self.decorationStructures:
-                                        decorationStructureFilePath = rootDir + decoration['decorationStructure']
+                                        decorationStructureFilePath = rootDir / decoration['decorationStructure']
                                         self.decorationStructures[decoration['decorationStructure']] = \
                                             StructurePrototype(
                                                 structureFilePath=decorationStructureFilePath,

@@ -1,6 +1,5 @@
 from StructurePrototype import StructurePrototype
-import glob
-import re
+from pathlib import Path
 
 global structurePrototypes
 global constructionBudget
@@ -17,10 +16,10 @@ def initialize():
 
 
 def loadStructures():
-    for mainStructureFolder in glob.glob('structures11/*/'):
-        structureFileName = re.sub(r'^.+/(.+)/$', r'\1', mainStructureFolder)
+    for structureFolder in Path('.').glob('structures11/*/'):
+        structureFileName = structureFolder.name
 
-        structureFilePath = mainStructureFolder + '/' + structureFileName
+        structureFilePath = structureFolder / structureFileName
 
         structurePrototypes[structureFileName] = StructurePrototype(
             structureFilePath=structureFilePath,
