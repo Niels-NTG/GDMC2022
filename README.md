@@ -1,5 +1,5 @@
 # GDMC 2022
-Submission by Niels-NTG for the [2022 AI Settlement Generation Challenge](https://gendesignmc.engineering.nyu.edu/).
+Submission by Niels-NTG for the [2024 Generative Design in Minecraft AI Settlement Generation Challenge](https://gendesignmc.wikidot.com/wiki:2022-settlement-generation-competition).
 
 In this competition participants design and implement an algorithm that constructs a settlement in Minecraft. Submissions are judged on the aesthetics and narrative qualities of the output, on how functional the structure is from a gameplay perspective, and how well it adapts to any arbitrary Minecraft landscape.
 
