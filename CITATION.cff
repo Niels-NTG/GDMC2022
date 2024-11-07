@@ -1,0 +1,25 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: GDMC 2022 - Field Lab Beta
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Niels
+    family-names: Poldervaart
+    orcid: 'https://orcid.org/0009-0008-0766-7592'
+repository-code: 'https://github.com/Niels-NTG/GDMC2022'
+url: 'https://nielspoldervaart.nl/gdmc'
+abstract: >-
+  "Field Lab Beta β", a submission by Niels-NTG for the 2022
+  Minecraft AI Settlement Generation Challenge.
+keywords:
+  - minecraft
+  - PCG
+  - game-AI
+  - procedural-content-generation
+  - architecture
+license: MIT
